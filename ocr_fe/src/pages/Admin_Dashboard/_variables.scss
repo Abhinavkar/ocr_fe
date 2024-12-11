@@ -1,0 +1,80 @@
+$white: #fff;
+$lightBlack: rgba(50, 50, 50, 1);
+$grayBlack : rgba(82, 82, 82, 1);
+$lightwhite : rgba(255, 255, 255, 0.56);
+$lightBlue : rgb(244 247 254);
+$mediumBlue: rgba(62, 47, 192, 1);
+$darkBlue: rgba(43, 54, 116, 1);
+$textColor :rgba(163, 174, 208, 1);
+$tableColor : rgba(16, 24, 40, 1);
+$fontSize13: 13px;
+$fontSize14: 14px;
+$fontSize16: 16px;
+$fontSize18: 18px;
+$fontSize24: 24px;
+$fontSize30: 30px;
+$fontWeight400: 400;
+$fontWeight500: 500;
+$fontWeight600: 600;
+$fontWeight700: 700;
+$borderRadius12 : 12px;
+$borderRadius20 : 20px;
+$btnShadow: 0px 4px 24px 0px rgba(5, 90, 168, 0.3);
+$pt13: 13px;
+$pb13: 13px;
+$pt15: 15px;
+$pb15: 15px;
+
+@mixin _btn-fill($bg, $color, $fontSize, $fontWeight ) {
+    background: $bg;
+    box-shadow: $btnShadow;
+    border-radius: $borderRadius12;
+    color: $color;
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+    padding-top: $pt13;
+    padding-bottom: $pb13;
+    border: none;
+}
+
+@mixin _heading {
+    font-size: $fontSize30;
+    font-weight: $fontWeight700;
+    color: rgba(43, 54, 116, 1);
+    margin-bottom: 0;
+}
+
+@mixin _subheading {
+    font-size: $fontSize24;
+    font-weight: $fontWeight700;
+    color: rgba(43, 54, 116, 1);
+    margin-bottom: 0;
+}
+
+@mixin _box {
+    background: $white;
+    border-radius: $borderRadius20;
+}
+
+@mixin _label {
+    font-size: $fontSize18;
+    color: $grayBlack;
+}
+
+@mixin _content {
+    font-size: $fontSize16;
+    color: $textColor;
+}
+
+@mixin _th {
+    font-size: $fontSize16;
+    font-weight: $fontWeight500;
+    color: $tableColor;
+}
+
+@mixin _td {
+    font-size: $fontSize14;
+    font-weight: $fontWeight500;
+    color: $tableColor;
+    vertical-align: middle;
+}
