@@ -369,9 +369,12 @@ textarea {
 }/*# sourceMappingURL=style.css.map */
 
 
-.upfile{
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
+.formUpload{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start !important;
+  justify-items: flex-start !important;
+
+  justify-content: flex-start !important;
 }

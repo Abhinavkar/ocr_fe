@@ -153,8 +153,8 @@ export const AdminDashboard = () => {
                                         </div>
                                     </div>
 
-                                    <div className="col-md-6 d-flex ps-5 align-items-center upfile">
-                                        <form onSubmit={handleFileUpload}>
+                                    <div className="row-md-6 d-flex ps-5 align-items-center upfile">
+                                        <form className="formUpload"onSubmit={handleFileUpload}>
                                             <div className="upload-files-container">
                                                 <span className="upload-icon"><img src={UploadPng} alt="Upload" /></span>
                                                 <h3 className="dynamic-message">Upload COURSE PDF</h3>
@@ -169,10 +169,15 @@ export const AdminDashboard = () => {
                                                 <h3 className="dynamic-message">Upload Question Paper Image</h3>
                                                 <input type="file" onChange={(e) => setQuestionImage(e.target.files[0])} accept="image/*" className="default-file-input" />
                                             </div>
-                                            <button type="submit" className="btn-fill">Upload</button>
+                                            <div>
+                                                 <button type="submit" className="btn-fill">Upload</button>
+                                             </div>
+                                          
                                         </form>
                                         <span>{message}</span>
+
                                     </div>
+                                    
                                 </div>
                             </div>
 
