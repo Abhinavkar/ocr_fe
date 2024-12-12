@@ -367,3 +367,11 @@ textarea {
   color: rgb(16, 24, 40);
   vertical-align: middle;
 }/*# sourceMappingURL=style.css.map */
+
+
+.upfile{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}

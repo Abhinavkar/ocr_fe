@@ -108,17 +108,31 @@ export const AdminDashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex ps-5 align-items-center">
+                                <div className="col-md-6 d-flex ps-5 align-items-center upfile">
     
                                     <form className="" enctype='multipart/form-data'>
                                         <div className="upload-files-container">
                                             <div className="">
                                                 <span className="upload-icon"> <img src={UploadPng} /> </span>
-                                                <h3 className="dynamic-message"> Upload Files</h3>
+                                                <h3 className="dynamic-message"> Upload COURSE PDF </h3>
                                                 <div className="">
                                                     <span className="browse-files">
                                                         <input type="file" className="default-file-input" />
-                                                        <span className="browse-files-text">PNG, JPG and GIF files
+                                                        <span className="browse-files-text">PDF ONLY</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span className="cannot-upload-message"> Please select a file first </span>
+    
+                                        </div>
+                                        <div className="upload-files-container">
+                                            <div className="">
+                                                <span className="upload-icon"> <img src={UploadPng} /> </span>
+                                                <h3 className="dynamic-message"> Upload Question Paper Image</h3>
+                                                <div className="">
+                                                    <span className="browse-files">
+                                                        <input type="file" className="default-file-input" />
+                                                        <span className="browse-files-text">PNG, JPG  files
                                                             areallowed</span>
                                                     </span>
                                                 </div>
