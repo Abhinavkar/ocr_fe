@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './AdminLogin.css';
 import AdminLogo from "../../assets/images/blacklogo.png";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AdminRegister = () => {
     const navigate = useNavigate();
@@ -20,9 +22,10 @@ export const AdminRegister = () => {
         });
 
         if (response.ok) {
+            toast.success('Registration successful');
             navigate('/');
         } else {
-            console.error('Registration failed');
+            toast.error('Registration failed');
         }
     };
 
@@ -53,8 +56,9 @@ export const AdminRegister = () => {
                         required
                     />
                 </div>
-                <button type="submit">Register</button>
+                <button className="bbutton"type="submit">Register</button>
             </form>
+            <ToastContainer />
         </div>
     );
 };

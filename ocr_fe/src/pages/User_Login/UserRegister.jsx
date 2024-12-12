@@ -55,7 +55,7 @@ export const UserRegister = () => {
             required
           />
         </div>
-        <button type="submit">Register</button>
+        <button className="bbutton"type="submit">Register</button>
       </form>
     </div>
   );

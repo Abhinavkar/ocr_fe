@@ -56,7 +56,7 @@
     box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
   }
   
-  button {
+  .bbutton {
     width: 100%;
     padding: 13px;
     background-color: rgb(62, 47, 192);

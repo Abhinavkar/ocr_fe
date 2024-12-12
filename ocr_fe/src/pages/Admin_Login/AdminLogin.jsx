@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './AdminLogin.css';
 import AdminLogo from "../../assets/images/blacklogo.png";
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AdminLogin = () => {
     const navigate = useNavigate();
@@ -12,23 +14,25 @@ export const AdminLogin = () => {
         e.preventDefault();
         if (username && password) {
             const login = async () => {
-                const response = await fetch('http://localhost:8000/api/auth/login/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password }),
-                }).then((response) => {
+                try {
+                    const response = await fetch('http://localhost:8000/api/auth/login/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password }),
+                    });
                     if (!response.ok) {
                         throw new Error('Invalid email or password');
+                        
                     }
-                    return response;
-                });
-                const data = await response.json();
-                localStorage.setItem('token', data.access);
-                localStorage.setItem('is_admin',data.is_admin);
-                // setUser(data); // Set user details in context
-                navigate('/dashboard');
+                    const data = await response.json();
+                    localStorage.setItem('token', data.access);
+                    localStorage.setItem('is_admin', data.is_admin);
+                    navigate('/dashboard');
+                } catch (error) {
+                    toast.error(error.message);
+                }
             };
             login();
         }
@@ -61,10 +65,10 @@ export const AdminLogin = () => {
                         required
                     />
                 </div>
-                <button type="submit">Login</button>
+                <button className='bbutton' type="submit">Login</button>
             </form>
-          <div className='notyet'>  <Link to="/admin/register">Don't have a ID Yet? Click to Register</Link></div>
-
+            <ToastContainer />
+            <div className='notyet'>  <Link to="/admin/register">Don't have a ID Yet? Click to Register</Link></div>
         </div>
     );
 };
