@@ -72,7 +72,3 @@
   button:hover {
     background-color: #0056b3;
   }
-  .notyet{
-    display:flex;
-    place-content: center;
-  }
