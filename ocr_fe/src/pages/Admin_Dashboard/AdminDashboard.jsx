@@ -122,7 +122,7 @@ export const AdminDashboard = () => {
                         <div className="container-fluid">
                             <div className="common-box">
                                 <div className="row align-items-start">
-                                    <div className="col-md-6 pe-5">
+                                    <div className="">
                                         <div className="form-group d-flex mb-3">
                                             <label className="col-sm-3 col-form-label label">Class</label>
                                             <div className="col-sm-9">
@@ -155,6 +155,7 @@ export const AdminDashboard = () => {
 
                                     <div className="row-md-6 d-flex ps-5 align-items-center upfile">
                                         <form className="formUpload"onSubmit={handleFileUpload}>
+                                            <div className='boxes'>
                                             <div className="upload-files-container">
                                                 <span className="upload-icon"><img src={UploadPng} alt="Upload" /></span>
                                                 <h3 className="dynamic-message">Upload COURSE PDF</h3>
@@ -169,7 +170,8 @@ export const AdminDashboard = () => {
                                                 <h3 className="dynamic-message">Upload Question Paper Image</h3>
                                                 <input type="file" onChange={(e) => setQuestionImage(e.target.files[0])} accept="image/*" className="default-file-input" />
                                             </div>
-                                            <div>
+                                            </div>
+                                            <div className='buttonBox'>
                                                  <button type="submit" className="btn-fill">Upload</button>
                                              </div>
                                           
