@@ -78,6 +78,8 @@ ul {
   font-weight: 700;
   color: rgb(43, 54, 116);
   margin-bottom: 0;
+  text-align: center;
+  width: 100%;
 }
 
 header {

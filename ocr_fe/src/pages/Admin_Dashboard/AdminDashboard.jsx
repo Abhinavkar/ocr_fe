@@ -80,29 +80,6 @@ export const AdminDashboard = () => {
                 <header>
                     <div className="d-flex justify-content-between">
                         <h2 className="heading">Question & Answer Admin Dashboard</h2>
-                        <div className="search-profile-blk">
-                            <div className="position-relative search-blk">
-                                <input type="text" className="form-control" placeholder="Search..." autoComplete="off" id="search-options" value="" />
-                            </div>
-                            <ul className="nav">
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#"><img src={NotificationsSvg} alt="Notifications" /></a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#"><img src={MoonSolidSvg} alt="Theme" /></a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#"><img src={InfoOutlineSvg} alt="Info" /></a>
-                                </li>
-                                <li className="nav-item">
-                                    <div className="dropdown">
-                                        <div className="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <img src={AvatarPng} alt="Avatar" />
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </header>
 
@@ -127,6 +104,7 @@ export const AdminDashboard = () => {
                                             <label className="col-sm-3 col-form-label label">Class</label>
                                             <div className="col-sm-9">
                                                         <select className="form-control" defaultValue="Class 1" value={classSelected} onChange={(e) => {setClassSelected(e.target.value);console.log("hi",e.target.value);}}>
+                                                            <option value="Select">Select</option>
                                                             <option value="Class 1">Class 1</option>
                                                             <option value="Class 2">Class 2</option>
                                                             <option value="Class 3">Class 3</option>
@@ -144,6 +122,7 @@ export const AdminDashboard = () => {
                                             <label className="col-sm-3 col-form-label label">Subject</label>
                                             <div className="col-sm-9">
                                                 <select className="form-control" value={subjectSelected} onChange={(e) => setSubjectSelected(e.target.value)}>
+                                                    <option value="Select">Select</option>
                                                     <option value="History">History</option>
                                                     <option  value="Geography">Geography</option>
                                                     <option  value="Science">Science</option>
