@@ -32,6 +32,7 @@ ul {
 .form-control {
   border-radius: 5px;
   border-color: rgb(201, 201, 201);
+  border: 2px solid red;
 }
 
 .form-control:focus {
