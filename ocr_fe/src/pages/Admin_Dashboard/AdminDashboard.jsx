@@ -28,6 +28,7 @@ export const AdminDashboard = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]); 
     const [classes, setClasses] = useState([]);
     const [subjects, setSubjects] = useState([]);
+    const [examid, setExamid] = useState('');
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
@@ -105,6 +106,7 @@ export const AdminDashboard = () => {
         const formData = new FormData();
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
+        formData.append('exam_id', examid);
         if (coursePdf) formData.append('course_pdf', coursePdf);
         if (questionImage) formData.append('question_image', questionImage);
 
@@ -187,6 +189,12 @@ export const AdminDashboard = () => {
                                                         </option>
                                                     ))}
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div className="form-group d-flex">
+                                            <label className="col-sm-3 col-form-label label">Exam Id </label>
+                                            <div className="col-sm-9">
+                                                <input type="text" className="form-control" placeholder="Enter Exam Id" />
                                             </div>
                                         </div>
                                     </div>
