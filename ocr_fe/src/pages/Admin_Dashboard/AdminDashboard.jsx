@@ -164,7 +164,7 @@ export const AdminDashboard = () => {
                                                 <select className="form-control" value={classSelected} onChange={(e) => setClassSelected(e.target.value)}>
                                                     <option value="">Select</option>
                                                     {classes.map((classItem) => (
-                                                        <option value={classItem.id} key={classItem.id}>
+                                                        <option value={classItem._id} key={classItem._id}>
                                                             {classItem.name}
                                                         </option>
                                                     ))}
