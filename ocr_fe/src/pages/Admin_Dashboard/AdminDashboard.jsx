@@ -182,7 +182,7 @@ export const AdminDashboard = () => {
                                                 >
                                                     <option value="">Select</option>
                                                     {subjects.map((subjectItem) => (
-                                                        <option value={subjectItem.id} key={subjectItem.id}>
+                                                        <option value={subjectItem._id} key={subjectItem._id}>
                                                             {subjectItem.name}
                                                         </option>
                                                     ))}
