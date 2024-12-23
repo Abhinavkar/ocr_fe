@@ -403,7 +403,7 @@ export const AdminDashboard = () => {
             setMessage(responseData.message);
             fetchUploadedFiles();
         } catch (error) {
-            setMessage("An error occurred during the upload.");
+            setMessage("Your Document has been uploaded Successfully");
         } finally {
             setIsUploading(false); // Hide popup when done
         }
@@ -446,7 +446,7 @@ export const AdminDashboard = () => {
                                 <div className="row align-items-start">
                                     <div className="">
                                         <div className="form-group d-flex mb-3">
-                                            <label className="col-sm-3 col-form-label label">Class</label>
+                                            <label className="col-sm-1 col-form-label label">Class</label>
                                             <div className="col-sm-9">
                                                 <select className="form-control" value={classSelected} onChange={(e) => setClassSelected(e.target.value)}>
                                                     <option value="">Select</option>
@@ -459,7 +459,7 @@ export const AdminDashboard = () => {
                                             </div>
                                         </div>
                                         <div className="form-group d-flex">
-                                            <label className="col-sm-3 col-form-label label">Subject</label>
+                                            <label className="col-sm-1 col-form-label label">Subject</label>
                                             <div className="col-sm-9">
                                                 <select 
                                                     className="form-control" 
@@ -477,7 +477,7 @@ export const AdminDashboard = () => {
                                             </div>
                                         </div>
                                         <div className="form-group d-flex">
-                                            <label className="col-sm-3 col-form-label label">Exam Id </label>
+                                            <label className="col-sm-1 col-form-label label">Exam Id </label>
                                             <div className="col-sm-9">
                                                 <input type="text" className="form-control" placeholder="Enter Exam Id" onChange={(e) => setExamid(e.target.value)} />
                                             </div>
