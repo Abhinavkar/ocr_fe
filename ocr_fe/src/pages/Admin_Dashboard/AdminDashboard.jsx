@@ -423,7 +423,7 @@ export const AdminDashboard = () => {
                     <div className="upload-popup">
                         <div className="popup-content">
                             <div className="spinner"></div>
-                            <p>Processing your upload, please wait...</p>
+                            <p>Processing, please wait...</p>
                         </div>
                     </div>
                 )}
