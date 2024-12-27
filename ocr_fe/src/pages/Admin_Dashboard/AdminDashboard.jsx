@@ -3,17 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
 import "./style.css";
 import "./style.scss";
-
-import SearchSvg from "../../assets/images/search.svg";
-import NotificationsSvg from "../../assets/images/notifications.svg";
-import MoonSolidSvg from "../../assets/images/moon-solid.svg";
-import InfoOutlineSvg from "../../assets/images/info_outline.svg";
-import AvatarPng from "../../assets/images/avatar.png";
+import { Link } from 'react-router-dom';
 import LogoSvg from "../../assets/images/logo.svg";
 import DashboardPng from "../../assets/images/dashboard.png";
 import DownloadPng from "../../assets/images/download.png";
-import NewsFeedPng from "../../assets/images/news-feed.png";
-import UpcomingEventsPng from "../../assets/images/upcoming-events.png";
 import CareersPng from "../../assets/images/careers.png";
 import LogoutPng from "../../assets/images/logout.png";
 import UploadPng from "../../assets/images/upload.png";
@@ -143,11 +136,28 @@ export const AdminDashboard = () => {
     };
 
     const handleNavigateAddUser = () => {
-        navigate('/add-user');
+        navigate('/user/register');
     };
 
     const handleNavigateAddSubadmin = () => {
         navigate('/add-subadmin');
+    };
+
+    const handleDelete = async (pdfName) => {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8000/api/qa/admin/upload/pdf/delete/${pdfName}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (response.ok) {
+            setUploadedFiles(uploadedFiles.filter(file => file.pdf_name !== pdfName));
+        } else {
+            const errorData = await response.json();
+            setMessage(errorData.message || "An error occurred during the deletion.");
+        }
     };
 
     return (
@@ -155,7 +165,7 @@ export const AdminDashboard = () => {
             <div>
                 <header>
                     <div className="d-flex justify-content-between">
-                        <h2 className="heading"> {user.organization}Admin Dashboard</h2>
+                        <h2 className="heading"> {user.organization} Admin Dashboard</h2>
                     </div>
                 </header>
                 {isUploading && (
@@ -174,18 +184,17 @@ export const AdminDashboard = () => {
                    
                     <ul>
                         <li ><span>Hi {user.first_name}</span></li>
-                        <li className="active"><a href="javascript:void(0)"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</a></li>
-                        <li><a href="javascript:void(0)" onClick={handleNavigateResult} ><span><img src={DownloadPng} alt="Download" /></span>Result Download</a></li>
+                        <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
+                        <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
                         {user.is_admin && (
                         <>
-                            <li><a href="javascript:void(0)" onClick={handleNavigateAddUser}><span><img src={CareersPng} alt="Add User" /></span>Add User</a></li>
-                            <li><a href="javascript:void(0)" onClick={handleNavigateAddSubadmin}><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</a></li>
+                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
+                            <li><Link to="/add-subadmin"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
                         </>
                     )}
                     {user.is_sub_admin && !user.is_admin && (
-                        <li><a href="javascript:void(0)" onClick={handleNavigateAddUser}><span><img src={CareersPng} alt="Add User" /></span>Add User</a></li>
-                    )}
-                        <li><a href="javascript:void(0)" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</a></li>
+                        <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
+                        <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
                     </ul>
                 </div>
 
@@ -269,8 +278,8 @@ export const AdminDashboard = () => {
                                                     <h3 className="dynamic-message">Upload Question Paper</h3>
                                                     <input 
                                                         type="file" 
-                                                        onChange={(e) => setQuestionPdf(e.target.files[0])} 
-                                                        accept=".pdf" 
+                                                        onChange={(e) => setQuestionImage(e.target.files[0])} 
+                                                        accept="image/*" 
                                                         className="default-file-input" 
                                                     />
                                                 </div>
@@ -295,6 +304,7 @@ export const AdminDashboard = () => {
                                                 <th>Subject <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
                                                 <th>PDF Name <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
                                                 <th>Question Name <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -314,7 +324,7 @@ export const AdminDashboard = () => {
                                                     </tr>
                                                 ))
                                             ) : (
-                                                <tr><td colSpan="4">No documents uploaded yet.</td></tr>
+                                                <tr><td colSpan="5">No documents uploaded yet.</td></tr>
                                             )}
                                         </tbody>
                                     </table>
