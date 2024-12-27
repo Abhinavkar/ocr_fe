@@ -21,6 +21,7 @@ function App() {
               <Route path="/dashboard" element={<AdminDashboard/>} />
               <Route path='/result' element={<Result/>}/>
               {/* <Route path="/" element={<PrivateRoute element={Dashboard} />} /> */}
+
               
       </Routes>
       </div>
