@@ -189,7 +189,7 @@ export const AdminDashboard = () => {
                         {user.is_admin && (
                         <>
                             <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                            <li><Link to="/add-subadmin"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
+                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
                         </>
                     )}
                     {user.is_sub_admin && !user.is_admin && (

@@ -11,7 +11,7 @@ import DownloadPng from "../../assets/images/download.png";
 import LogoutPng from "../../assets/images/logout.png";
 import CareersPng from "../../assets/images/careers.png"
 import { Link } from 'react-router-dom';
-export const UserRegister = () => {
+export const SubUserRegister = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext); // Access user data from context
     const [username, setUsername] = useState('');
@@ -97,7 +97,7 @@ export const UserRegister = () => {
             <div className="main-content">
                 <div className="login-container">
                     <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />
-                    <h2>User Registration</h2>
+                    <h2>Sub Admin Registration</h2>
                     <form onSubmit={handleRegister}>
                         <div className="form-group">
                             <label htmlFor="organization">Organization : {user.organization}</label>

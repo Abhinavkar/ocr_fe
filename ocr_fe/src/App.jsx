@@ -6,6 +6,7 @@ import { AdminLogin } from './pages/Admin_Login/AdminLogin'
 import { AdminRegister } from './pages/Admin_Login/AdminRegister'
 import { UserRegister } from './pages/User_Login/UserRegister'
 import { Result } from './pages/Result/Result'
+import { SubUserRegister } from './pages/User_Login/SubUserRegister'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +21,7 @@ function App() {
               <Route path="/user/register" element={<UserRegister/>} />
               <Route path="/dashboard" element={<AdminDashboard/>} />
               <Route path='/result' element={<Result/>}/>
+              <Route path='/sub-user/register' element={<SubUserRegister/>}/>
               {/* <Route path="/" element={<PrivateRoute element={Dashboard} />} /> */}
 
               
