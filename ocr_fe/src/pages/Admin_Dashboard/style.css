@@ -370,7 +370,7 @@ textarea {
   font-weight: 500;
   color: rgb(16, 24, 40);
   vertical-align: middle;
-}/*# sourceMappingURL=style.css.map */
+}
 
 
 
@@ -397,8 +397,6 @@ textarea {
 
 
 
-
-/*Processing pop up in ui(Digant)*/
 .upload-popup {
   position: fixed;
   top: 0;
@@ -447,3 +445,39 @@ textarea {
   0% { opacity: 0; transform: translateY(-20px); }
   100% { opacity: 1; transform: translateY(0); }
 } 
+
+/*Upload type css added by digant*/
+.upload-type-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.upload-type-label {
+  font-size: 18px;
+  font-weight: 500;
+  color: rgb(82, 82, 82);
+  margin-right: 20px;
+}
+
+.upload-type-select {
+  border-radius: 5px;
+  border: 2px solid rgb(201, 201, 201);
+  padding: 8px 12px;
+  font-size: 16px;
+  color: rgb(67, 24, 255);
+  background: #fff;
+  cursor: pointer;
+}
+
+.upload-type-select:focus {
+  outline: none;
+  border-color: rgb(62, 47, 192);
+  box-shadow: 0 0 5px rgba(62, 47, 192, 0.5);
+}
+
+.upload-type-select option {
+  font-size: 16px;
+  color: rgb(82, 82, 82);
+}
