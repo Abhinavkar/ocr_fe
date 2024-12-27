@@ -1,0 +1,103 @@
+.result-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.result-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    color: rgb(43, 54, 116);
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.result-table th,
+.result-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.result-table th {
+    background-color: rgb(62, 47, 192);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.result-table td {
+    font-size: 14px;
+    color: rgb(82, 82, 82);
+}
+
+.result-page {
+    display: flex;
+}
+
+.sidenav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 290px;
+    border-radius: 0px 24px 24px 0px;
+    background: linear-gradient(135deg, #2609A5 0%, #656CED 100%);
+    padding-left: 15px;
+    padding-top: 25px;
+}
+
+.sidenav .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidenav ul {
+    padding-left: 5px;
+    margin-top: 40px;
+}
+
+.sidenav ul li {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.sidenav ul li a {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 30px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidenav ul li a span {
+    margin-right: 15px;
+}
+
+.sidenav ul .active:after {
+    content: "";
+    position: absolute;
+    width: 4px;
+    background: #fff;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.sidenav ul .active a {
+    font-weight: 700;
+}
+
+.main-content {
+    margin-left: 290px;
+    padding: 20px;
+    width: calc(100% - 290px);
+}

@@ -1,20 +1,17 @@
-
-  
-  body {
+body {
     font-family: "DM Sans", sans-serif;
     background: rgb(244, 247, 254);
     display: flex;
-    place-items :center;
+    place-items: center;
     justify-content: center;
+}
 
-  }
-  .LoginLogoImage{
-    height: 100px;
-    margin: 10px;
-  }
-  
-  .login-container {
+.LoginLogoImage {
+    height: 150px;
+    margin: 20px;
+}
 
+.login-container {
     max-width: 700px;
     margin: 0 auto;
     padding: 20px;
@@ -22,41 +19,45 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background: #fff;
-  }
-  
-  .login-container h2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container h2 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 30px;
     font-weight: 700;
     color: rgb(43, 54, 116);
-  }
-  
-  .form-group {
+}
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  .form-group label {
+}
+
+.form-group label {
     display: block;
     margin-bottom: 5px;
     font-size: 18px;
     color: rgb(82, 82, 82);
-  }
-  
-  .form-group input {
+}
+
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border-radius: 5px;
     border-color: rgb(201, 201, 201);
-  }
-  
-  .form-group input:focus {
+}
+
+.form-group input:focus,
+.form-group select:focus {
     border-color: rgb(201, 201, 201);
     box-shadow: 0 0 0 0rem rgba(13, 110, 253, 0.25);
-  }
-  
-  .bbutton {
+}
+
+.btn-fill {
     width: 100%;
     padding: 13px;
     background-color: rgb(62, 47, 192);
@@ -67,12 +68,19 @@
     font-size: 16px;
     font-weight: 500;
     box-shadow: 0px 4px 24px 0px rgba(5, 90, 168, 0.3);
-  }
-  
-  button:hover {
+}
+
+.btn-fill:hover {
     background-color: #0056b3;
-  }
-  .notyet{
-    display:flex;
+}
+
+.notyet {
+    display: flex;
     place-content: center;
-  }
+}
+.form-group-box{
+
+    display: flex !important;
+    margin: 20px;
+ 
+}

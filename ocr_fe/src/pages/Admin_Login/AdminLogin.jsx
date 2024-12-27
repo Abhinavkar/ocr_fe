@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './AdminLogin.css';
 import AdminLogo from "../../assets/images/blacklogo.png";
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from '../../UserContext';
 
 export const AdminLogin = () => {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -24,11 +26,12 @@ export const AdminLogin = () => {
                     });
                     if (!response.ok) {
                         throw new Error('Invalid email or password');
-                        
                     }
                     const data = await response.json();
                     localStorage.setItem('token', data.access);
                     localStorage.setItem('is_admin', data.is_admin);
+                    setUser(data); // Set user details in context
+                
                     navigate('/dashboard');
                 } catch (error) {
                     toast.error(error.message);
