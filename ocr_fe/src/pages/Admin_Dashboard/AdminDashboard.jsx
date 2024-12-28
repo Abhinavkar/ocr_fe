@@ -31,12 +31,10 @@ export const AdminDashboard = () => {
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
-            const token = localStorage.getItem('token');
+            
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/list/', {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+            
             });
 
             if (response.ok) {
@@ -45,7 +43,7 @@ export const AdminDashboard = () => {
             }
         };
         const fetchClassApi = async () => {
-            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization}`, {
+            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
                 method: 'GET',
             });
 
