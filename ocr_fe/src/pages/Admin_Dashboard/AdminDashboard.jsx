@@ -218,6 +218,14 @@ export const AdminDashboard = () => {
                                             </div>
                                         </div>
                                         <div className="form-group d-flex">
+                                        <label className="col-sm-3 col-form-label label">Sections</label>
+                                            <div className="col-sm-9">
+                                                <select className="form-control" value={classSelected} onChange={(e) => setClassSelected(e.target.value)}>
+                                                    <option value="">Select Section</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="form-group d-flex">
                                             <label className="col-sm-3 col-form-label label">Subject</label>
                                             <div className="col-sm-9">
                                                 <select 

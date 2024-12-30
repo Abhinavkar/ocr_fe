@@ -379,7 +379,7 @@ textarea {
   flex-direction: column;
   align-items: flex-start !important;
   justify-items: flex-start !important;
-
+  padding : 10%;
   justify-content: flex-start !important; 
 }
 .boxes{
