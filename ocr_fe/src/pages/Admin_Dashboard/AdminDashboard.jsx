@@ -12,7 +12,6 @@ import LogoutPng from "../../assets/images/logout.png";
 import UploadPng from "../../assets/images/upload.png";
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
 
-
 export const AdminDashboard = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext); 
@@ -100,10 +99,12 @@ export const AdminDashboard = () => {
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
         formData.append('exam_id', examid);
+        formData.append('upload_type', uploadType);
+        
         if (uploadType === 'pdf' && coursePdf) {
             formData.append('course_pdf', coursePdf);
         }
-        if (uploadType === 'image' && questionImage) {
+        if (uploadType === 'pdf' && questionImage) {
             formData.append('question_image', questionImage);
         }
 
@@ -188,6 +189,7 @@ export const AdminDashboard = () => {
                         <>
                             <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
                             <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
+                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
                         </>
                     )}
                     {user.is_sub_admin && !user.is_admin && (
@@ -277,7 +279,7 @@ export const AdminDashboard = () => {
                                                     <input 
                                                         type="file" 
                                                         onChange={(e) => setQuestionImage(e.target.files[0])} 
-                                                        accept="image/*" 
+                                                        accept="image/*,.pdf" 
                                                         className="default-file-input" 
                                                     />
                                                 </div>
@@ -335,5 +337,3 @@ export const AdminDashboard = () => {
         </>
     );
 };
-
-
