@@ -243,7 +243,7 @@ export const AdminDashboard = () => {
                                     <div className="row-md-6 d-flex ps-5 align-items-center upfile">
                                         <form className="formUpload" onSubmit={handleFileUpload}>
                                             <div className="form-group d-flex">
-                                            <label className="col-sm-3 col-form-label label">Upload </label>
+                                            <label className="col-sm-7 col-form-label label">Upload</label>
                                                 <div className="col-sm-9">
                                                     <select 
                                                         id="uploadType" 
