@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
 import "./style.css";
 import "./style.scss";
-import { Link } from 'react-router-dom';
 import LogoSvg from "../../assets/images/logo.svg";
 import DashboardPng from "../../assets/images/dashboard.png";
 import DownloadPng from "../../assets/images/download.png";
-import CareersPng from "../../assets/images/careers.png";
 import LogoutPng from "../../assets/images/logout.png";
 import UploadPng from "../../assets/images/upload.png";
+import CareersPng from "../../assets/images/careers.png"
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
 
 export const AdminDashboard = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext); 
     const [classSelected, setClassSelected] = useState('');
+    const [sectionSelected, setSectionSelected] = useState('');
     const [subjectSelected, setSubjectSelected] = useState('');
     const [uploadType, setUploadType] = useState('pdf'); 
     const [coursePdf, setCoursePdf] = useState(null);
@@ -23,6 +23,7 @@ export const AdminDashboard = () => {
     const [message, setMessage] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [classes, setClasses] = useState([]);
+    const [sections, setSections] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [examid, setExamid] = useState('');
     const [isUploading, setIsUploading] = useState(false); 
@@ -30,10 +31,12 @@ export const AdminDashboard = () => {
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
-            
+            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/list/', {
                 method: 'GET',
-            
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
             });
 
             if (response.ok) {
@@ -49,25 +52,31 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 const data = await response.json();
                 setClasses(data);
+             
             }
         };
 
-        const fetchSectionApi = async (classId) => {
-            const response = await fetch(`http://localhost:8000/api/services/sections/${classId}/`, {
-            method: 'GET',
-            });
-
-            if (response.ok) {
-            const data = await response.json();
-            setSections(data || []);
-            }
-        };
-
+      
         fetchUploadedFiles();
         fetchClassApi();
-    }, []);
+    }, [user.organization_id]);
 
+    const fetchSectionApi = async (classId) => {
+        const response = await fetch(`http://localhost:8000/api/services/sections/${classId}/`, {
+        method: 'GET',
+        });
+
+        if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        setSections(data || []);
+        if (data.length > 0) {
+            fetchSubjectApi(data[0].id); 
+        }
+        }
+    };
     const fetchSubjectApi = async (sectionId) => {
+        console.log(sectionId)
         const response = await fetch(`http://localhost:8000/api/services/subjects/${sectionId}/`, {
             method: 'GET',
         });
@@ -79,15 +88,18 @@ export const AdminDashboard = () => {
     };
 
 
-    useEffect(() => {
-        if (classSelected) {
-            fetchSubjectApi(classSelected);
-            setSubjectSelected(''); 
-        } else {
-            setSubjects([]); 
-            setSubjectSelected('');
-        }
-    }, [classSelected]);
+
+    const handleClassChange = (e) => {
+        const classId = e.target.value;
+        setClassSelected(classId);
+        fetchSectionApi(classId);
+    };
+
+    const handleSectionChange = (e) => {
+        const sectionId = e.target.value;
+        setSectionSelected(sectionId);
+        fetchSubjectApi(sectionId);
+    };
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -124,9 +136,7 @@ export const AdminDashboard = () => {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+               
                 body: formData,
             });
 
@@ -219,7 +229,7 @@ export const AdminDashboard = () => {
                                         <div className="form-group d-flex mb-3">
                                             <label className="col-sm-3 col-form-label label">Class</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={classSelected} onChange={(e) => setClassSelected(e.target.value)}>
+                                                <select className="form-control" value={classSelected} onChange={handleClassChange}>
                                                     <option value="">Select</option>
                                                     {classes.map((classItem) => (
                                                         <option value={classItem._id} key={classItem._id}>
@@ -232,8 +242,11 @@ export const AdminDashboard = () => {
                                         <div className="form-group d-flex">
                                         <label className="col-sm-3 col-form-label label">Sections</label>
                                             <div className="col-sm-9">
-                                                <select className="form-control" value={classSelected} onChange={(e) => setClassSelected(e.target.value)}>
+                                                <select className="form-control" value={sectionSelected} onChange={handleSectionChange}>
                                                     <option value="">Select Section</option>
+                                                    {sections.map((section) => (
+                                                        <option key={section._id} value={section._id}>{section.name}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
