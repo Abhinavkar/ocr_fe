@@ -52,12 +52,23 @@ export const AdminDashboard = () => {
             }
         };
 
+        const fetchSectionApi = async (classId) => {
+            const response = await fetch(`http://localhost:8000/api/services/sections/${classId}/`, {
+            method: 'GET',
+            });
+
+            if (response.ok) {
+            const data = await response.json();
+            setSections(data || []);
+            }
+        };
+
         fetchUploadedFiles();
         fetchClassApi();
     }, []);
 
-    const fetchSubjectApi = async (classId) => {
-        const response = await fetch(`http://localhost:8000/api/services/subjects/${classId}/`, {
+    const fetchSubjectApi = async (sectionId) => {
+        const response = await fetch(`http://localhost:8000/api/services/subjects/${sectionId}/`, {
             method: 'GET',
         });
 
@@ -66,6 +77,7 @@ export const AdminDashboard = () => {
             setSubjects(data || []);
         }
     };
+
 
     useEffect(() => {
         if (classSelected) {
