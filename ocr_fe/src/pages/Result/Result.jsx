@@ -34,7 +34,6 @@ export const Result = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('is_admin');
         navigate('/');
-
     };
     return (
         <div className="result-page">
@@ -56,6 +55,8 @@ export const Result = () => {
                             <tr>
                                 <th>Document ID</th>
                                 <th>Exam ID</th>
+                                <th>Class</th>
+                                <th>Subject</th>
                                 <th>Roll No</th>
                                 <th>Score</th>
                             </tr>
@@ -64,6 +65,8 @@ export const Result = () => {
                             {results.map((result) => (
                                 <tr key={result.document_id}>
                                     <td>{result.document_id}</td>
+                                    <td>{result.class_id}</td>
+                                    <td>{result.subject}</td>
                                     <td>{result.exam_id}</td>
                                     <td>{result.roll_no}</td>
                                     <td>{result.similarity_score}</td>
@@ -76,3 +79,4 @@ export const Result = () => {
         </div>
     );
 };
+

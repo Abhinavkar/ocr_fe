@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    padding-top: 20px;
+}
+
+.sidenav .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidenav .logo img {
+    width: 150px;
+}
+
+.sidenav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidenav ul li {
+    padding: 8px 16px;
+    text-align: left;
+}
+
+.sidenav ul li a {
+    color: #818181;
+    text-decoration: none;
+    display: block;
+}
+
+.sidenav ul li a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav ul li.active a {
+    color: #f1f1f1;
+    background-color: #575757;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.class-management-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.class-management-container h2 {
+    margin-top: 0;
+}
+
+.class-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.class-table th,
+.class-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.class-table th {
+    background-color: #333;
+    color: white;
+}
+
+.class-table td {
+    background-color: #f9f9f9;
+}
