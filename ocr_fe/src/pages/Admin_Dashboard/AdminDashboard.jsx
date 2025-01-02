@@ -122,6 +122,7 @@ export const AdminDashboard = () => {
         const formData = new FormData();
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
+        formData.append("section_selected",sectionSelected)
         formData.append('exam_id', examid);
         formData.append('upload_type', uploadType);
         
@@ -133,7 +134,7 @@ export const AdminDashboard = () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
+
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
                 method: 'POST',
                
