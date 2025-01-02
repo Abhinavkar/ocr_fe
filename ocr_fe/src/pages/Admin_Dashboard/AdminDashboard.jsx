@@ -212,6 +212,7 @@ export const AdminDashboard = () => {
                             <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
                             <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
                             <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
+                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
                         </>
                     )}
                     {user.is_sub_admin && !user.is_admin && (
