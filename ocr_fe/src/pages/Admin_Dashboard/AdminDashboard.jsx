@@ -31,12 +31,10 @@ export const AdminDashboard = () => {
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
-            const token = localStorage.getItem('token');
+         
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/list/', {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
+
             });
 
             if (response.ok) {
@@ -128,33 +126,56 @@ export const AdminDashboard = () => {
         
         if (uploadType === 'pdf' && coursePdf) {
             formData.append('course_pdf', coursePdf);
-        }
-        if (uploadType === 'pdf' && questionImage) {
-            formData.append('question_image', questionImage);
-        }
+            try {
 
-        try {
-
-            const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
-                method: 'POST',
-               
-                body: formData,
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                setMessage(errorData.message || "An error occurred during the upload.");
+                const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
+                    method: 'POST',
+                   
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    setMessage(errorData.message || "An error occurred during the upload.");
+                    setIsUploading(false); 
+                    return;
+                }
+                const responseData = await response.json();
+                setMessage(responseData.message);
+                fetchUploadedFiles();
+            } catch (error) {
+                setMessage("Your Document has been uploaded Successfully");
+            } finally {
                 setIsUploading(false); 
-                return;
             }
-            const responseData = await response.json();
-            setMessage(responseData.message);
-            fetchUploadedFiles();
-        } catch (error) {
-            setMessage("Your Document has been uploaded Successfully");
-        } finally {
-            setIsUploading(false); 
         }
+        if (uploadType === 'image' && questionImage) {
+            formData.append('question_image', questionImage);
+            try {
+
+                const response = await fetch('http://localhost:8000/api/qa/admin/upload/question-pdf/', {
+                    method: 'POST',
+                   
+                    body: formData,
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    setMessage(errorData.message || "An error occurred during the upload.");
+                    setIsUploading(false); 
+                    return;
+                }
+                const responseData = await response.json();
+                setMessage(responseData.message);
+                fetchUploadedFiles();
+            } catch (error) {
+                setMessage("Your Document has been uploaded Successfully");
+            } finally {
+                setIsUploading(false); 
+            }
+        }
+
+       
     };
 
     const handleNavigateAddUser = () => {

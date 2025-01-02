@@ -70,7 +70,7 @@ const ClassManagement = () => {
                                 <tr key={classItem._id}>
                                     <td>{classItem._id}</td>
                                     <td>{classItem.name}</td>
-                                    <td>{classItem.section}</td>
+                                    {/* <td>{classItem.section}</td> */}
                                 </tr>
                             ))}
                         </tbody>
