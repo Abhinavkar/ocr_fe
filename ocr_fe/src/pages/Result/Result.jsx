@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useContext } from 'react';
 import React, { useState, useEffect ,useContext} from 'react';
 import './Result.css';
 import LogoSvg from "../../assets/images/logo.svg";
@@ -8,33 +9,48 @@ import CareersPng from "../../assets/images/careers.png"
 
 import { useNavigate,Link } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
+import { UserContext } from '../../UserContext';
 
 export const Result = () => {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const [results, setResults] = useState([]);
-    const {user}= useContext(UserContext)
+    const [classes, setClasses] = useState([]);
 
     useEffect(() => {
         const fetchResults = async () => {
             const response = await fetch('http://localhost:8000/api/qa/results/', {
                 method: 'GET',
+              
             });
 
             if (response.ok) {
                 const data = await response.json();
-                 (data);
+                setResults(data);
             }
             console.log(results);
         };
 
         fetchResults();
-    }, []);
+        fetchClasses();
+    }, [user.organization_id]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('is_admin');
         navigate('/');
     };
+
+    const getClassById = (id) => {
+        const classItem = classes.find((classItem) => {
+            console.log(classItem._id, id);
+            return classItem._id === id; // Return the comparison result
+        });
+        console.log(classItem);
+        return classItem ? classItem.name : 'Unknown Class'; // Fallback if class ID not found
+    };
+    
+
     return (
         <div className="result-page">
              <div className="sidenav">
@@ -66,7 +82,6 @@ export const Result = () => {
                     <table className="result-table">
                         <thead>
                             <tr>
-                                <th>Document ID</th>
                                 <th>Exam ID</th>
                                 <th>Class</th>
                                 <th>Subject</th>
@@ -77,10 +92,9 @@ export const Result = () => {
                         <tbody>
                             {results.map((result) => (
                                 <tr key={result.document_id}>
-                                    <td>{result.document_id}</td>
-                                    <td>{result.class_id}</td>
-                                    <td>{result.subject}</td>
                                     <td>{result.exam_id}</td>
+                                    <td>{getClassById(result.class_id)}</td>
+                                    <td>{result.subject}</td>
                                     <td>{result.roll_no}</td>
                                     <td>{result.similarity_score}</td>
                                 </tr>
@@ -93,3 +107,4 @@ export const Result = () => {
     );
 };
 
+export default Result;
