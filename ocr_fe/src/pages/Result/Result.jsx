@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useContext} from 'react';
 import './Result.css';
 import LogoSvg from "../../assets/images/logo.svg";
 import DashboardPng from "../../assets/images/dashboard.png";
 import DownloadPng from "../../assets/images/download.png";
 import LogoutPng from "../../assets/images/logout.png";
-import { useNavigate } from 'react-router-dom';
+import CareersPng from "../../assets/images/careers.png"
+
+import { useNavigate,Link } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 
 export const Result = () => {
     const navigate = useNavigate();
     const [results, setResults] = useState([]);
+    const {user}= useContext(UserContext)
 
     useEffect(() => {
         const fetchResults = async () => {
-            const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:8000/api/qa/results/', {
                 method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
             });
 
             if (response.ok) {
                 const data = await response.json();
-                setResults(data);
+                 (data);
             }
             console.log(results);
         };
@@ -37,16 +37,29 @@ export const Result = () => {
     };
     return (
         <div className="result-page">
-            <div className="sidenav">
-                <div className="logo">
-                    <img src={LogoSvg} alt="Logo" />
+             <div className="sidenav">
+                    <div className="logo">
+                        <img src={LogoSvg} alt="Logo" />
+                    </div>
+                   
+                    <ul>
+                        <li ><span>Hi {user.first_name}</span></li>
+                        <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
+                        <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
+                        {user.is_admin && (
+                        <>
+                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
+                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
+                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
+                            <li><Link to="/class/management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
+                        </>
+                    )}
+                    {user.is_sub_admin && !user.is_admin && (
+                        <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
+                        <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
+                    </ul>
                 </div>
-                <ul>
-                    <li><a href="javascript:void(0)"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</a></li>
-                    <li className="active"><a href="javascript:void(0)"><span><img src={DownloadPng} alt="Download" /></span>Results</a></li>
-                    <li><a href="javascript:void(0)" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</a></li>
-                </ul>
-            </div>
+
             <div className="main-content">
                 <div className="result-container">
                     <h2>Results</h2>
