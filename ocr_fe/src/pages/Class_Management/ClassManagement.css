@@ -2,7 +2,7 @@
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(8, 8, 8, 0.87);
     display: flex;
     flex-direction: column;
     align-items: flex-start; 
@@ -26,8 +26,8 @@
 }
 
 .class-table th {
-    background-color: #333;
-    color: white;
+    background-color: white;
+    color: black;
 }
 
 .class-table td {
