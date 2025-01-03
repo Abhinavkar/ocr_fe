@@ -96,20 +96,6 @@ const ClassManagement = () => {
             setUpdateClassName('');
             try {
 
-    useEffect(() => {
-        const fetchClasses = async () => {
-            const response = await fetch('http://localhost:8000/api/services/classes/676d5062b1f7e1e5c223eace/', {
-                method: 'GET',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setClasses(data);
-            }
-        };
-
-        fetchClasses();
-    }, []);
 
                         }
             catch{
