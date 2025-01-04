@@ -28,6 +28,7 @@ export const AdminDashboard = () => {
     const [examid, setExamid] = useState('');
     const [isUploading, setIsUploading] = useState(false); 
     console.log("User:", user);
+    const [isManagementDropdownOpen, setIsManagementDropdownOpen] = useState(false); // State for dropdown visibility
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
@@ -115,6 +116,10 @@ export const AdminDashboard = () => {
             return;
         }
 
+        const toggleManagementDropdown = () => {
+            setIsManagementDropdownOpen(!isManagementDropdownOpen);
+        };
+    
         setIsUploading(true); 
 
         const formData = new FormData();
@@ -234,8 +239,11 @@ export const AdminDashboard = () => {
                             <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
                             <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
                             <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
-                            <li><Link to="/class/management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
+                            <li><Link to="/class/management"><span><img src={CareersPng} alt="Class Management" /></span>Class Management</Link></li>
+                            <li><Link to="/section/management"><span><img src={CareersPng} alt="Section Management" /></span>Section Management</Link></li>
+                            <li><Link to="/subject/management"><span><img src={CareersPng} alt="Subject Management" /></span>Subject Management</Link></li>
                         </>
+                        
                     )}
                     {user.is_sub_admin && !user.is_admin && (
                         <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}

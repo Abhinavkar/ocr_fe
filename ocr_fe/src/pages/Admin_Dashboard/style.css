@@ -481,3 +481,36 @@ textarea {
   font-size: 16px;
   color: rgb(82, 82, 82);
 }
+
+
+.dropdown-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #111;
+  border: 1px solid #575757;
+  position: absolute;
+  left: 250px; /* Adjust based on your layout */
+  top: 200px; /* Adjust based on your layout */
+  z-index: 1000;
+}
+
+.dropdown-menu li {
+  padding: 8px 16px;
+}
+
+.dropdown-menu li a {
+  color: #818181;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-menu li a:hover {
+  color: #f1f1f1;
+}
