@@ -28,7 +28,7 @@ export const AdminDashboard = () => {
     const [examid, setExamid] = useState('');
     const [isUploading, setIsUploading] = useState(false); 
     console.log("User:", user);
-    const [isManagementDropdownOpen, setIsManagementDropdownOpen] = useState(false); // State for dropdown visibility
+    
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
@@ -116,9 +116,6 @@ export const AdminDashboard = () => {
             return;
         }
 
-        const toggleManagementDropdown = () => {
-            setIsManagementDropdownOpen(!isManagementDropdownOpen);
-        };
     
         setIsUploading(true); 
 
