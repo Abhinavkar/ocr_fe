@@ -42,7 +42,7 @@ export const SubUserRegister = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('http://localhost:8000/api/auth/user/register/', {
+        const response = await fetch('http://localhost:8000/api/auth/org/register/subadmin/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,13 +55,13 @@ export const SubUserRegister = () => {
                 email,
                 section_assigned: sectionAssigned,
                 department,
-                organization
+                organization: user.organization_id,
             }),
         });
 
         if (response.ok) {
             toast.success('Registration successful');
-            navigate('/user/login');
+            navigate('/');
         } else {
             toast.error('Registration failed');
         }
