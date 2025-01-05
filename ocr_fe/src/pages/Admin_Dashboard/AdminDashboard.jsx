@@ -29,6 +29,7 @@ export const AdminDashboard = () => {
     const [examid, setExamid] = useState('');
     const [isUploading, setIsUploading] = useState(false); 
     console.log("User:", user);
+    
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
@@ -116,6 +117,7 @@ export const AdminDashboard = () => {
             return;
         }
 
+    
         setIsUploading(true); 
 
         const formData = new FormData();
@@ -220,8 +222,38 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
                 )}
+<<<<<<< HEAD
                 <SideNav/>
               
+=======
+
+                <div className="sidenav">
+                    <div className="logo">
+                        <img src={LogoSvg} alt="Logo" />
+                    </div>
+                   
+                    <ul>
+                        <li ><span>Hi {user.first_name}</span></li>
+                        <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
+                        <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
+                        {user.is_admin && (
+                        <>
+                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
+                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
+                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
+                            <li><Link to="/class/management"><span><img src={CareersPng} alt="Class Management" /></span>Class Management</Link></li>
+                            <li><Link to="/section/management"><span><img src={CareersPng} alt="Section Management" /></span>Section Management</Link></li>
+                            <li><Link to="/subject/management"><span><img src={CareersPng} alt="Subject Management" /></span>Subject Management</Link></li>
+                        </>
+                        
+                    )}
+                    {user.is_sub_admin && !user.is_admin && (
+                        <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
+                        <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
+                    </ul>
+                </div>
+
+>>>>>>> 598d5c10335cc841232c9b8c03e5a7e627507006
                 <div className="main-content">
                     <div className="page-content">
                         <div className="container-fluid">
