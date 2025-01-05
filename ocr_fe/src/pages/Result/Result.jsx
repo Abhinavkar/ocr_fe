@@ -139,10 +139,11 @@ export const Result = () => {
                                     <td>{i + 1}</td>
                                     <td>{result.exam_id}</td>
                                     <td>{getClassById(result.class_id)}</td>
-                                    <td>Section A</td>
-                                    <td>Physics</td>
+                                    <td>{result.section}</td>
+                                    <td>{result.subject}</td>
                                     <td>{result.roll_no}</td>
-                                    {/* <td>{result.similarity_score}</td> */}
+                                    <td>{result.similarity_score}</td>
+                                    
                                     <td>Abhinav Kar</td>
                                     <td><button onClick={() => handleDownload(result)}>Download</button></td>
                                 </tr>
