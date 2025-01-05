@@ -10,6 +10,7 @@ import DashboardPng from "../../assets/images/dashboard.png";
 import DownloadPng from "../../assets/images/download.png";
 import CareersPng from "../../assets/images/careers.png"
 import LogoutPng from "../../assets/images/logout.png";
+import SideNav from '../../components/SideNav';
 
 
 export const UserRegister = () => {
@@ -94,25 +95,7 @@ export const UserRegister = () => {
 
     return (
         <div className="user-register-page">
-            <div className="sidenav">
-                <div className="logo">
-                    <img src={LogoSvg} alt="Logo" />
-                </div>
-                <ul>
-                    <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
-                    <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
-                    {user.is_admin && (
-                        <>
-                            <li><Link to="/add-user"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
-                        </>
-                    )}
-                    {user.is_sub_admin && !user.is_admin && (
-                        <li><Link to="/add-user"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                    )}
-                    <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
-                </ul>
-            </div>
+            <SideNav/>
             <div className="main-content">
                 <div className="login-container">
                     <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />

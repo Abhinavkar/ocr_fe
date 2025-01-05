@@ -6,7 +6,8 @@ import DownloadPng from "../../assets/images/download.png";
 import LogoutPng from "../../assets/images/logout.png";
 import CareersPng from "../../assets/images/careers.png";
 import './ClassManagement.css';
-
+import { UserContext } from '../../UserContext';
+import SideNav from '../../components/SideNav';
 const ClassManagement = () => {
     const navigate = useNavigate();
     const [classes, setClasses] = useState([]);
@@ -34,14 +35,16 @@ const ClassManagement = () => {
     };
 
     const handleCreateClass = async () => {
+        console.log("CLikced")
         const response = await fetch('http://localhost:8000/api/services/classes/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'userId':user._id,
             },
             body: JSON.stringify({
                 name: newClassName,
-                sections: [{ name: newClassSection }],
+               
             }),
         });
 
@@ -63,21 +66,7 @@ const ClassManagement = () => {
         }
     };
 
-    const SideNav = () => (
-        <div className="sidenav">
-            <div className="logo">
-                <img src={LogoSvg} alt="Logo" />
-            </div>
-            <ul>
-                <li><a href="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</a></li>
-                <li><a href="/results"><span><img src={DownloadPng} alt="Download" /></span>Results</a></li>
-                <li><a href="/user/register"><span><img src={CareersPng} alt="Add User" /></span>Add User</a></li>
-                <li><a href="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</a></li>
-                <li className="active"><a href="/class-management"><span><img src={CareersPng} alt="Class Management" /></span>Class Management</a></li>
-                <li><a href="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</a></li>
-            </ul>
-        </div>
-    );
+    
 
     return (
         <div className="class-management-page">

@@ -10,6 +10,7 @@ import LogoutPng from "../../assets/images/logout.png";
 import UploadPng from "../../assets/images/upload.png";
 import CareersPng from "../../assets/images/careers.png"
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
+import SideNav from '../../components/SideNav';
 
 export const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ export const AdminDashboard = () => {
     useEffect(() => {
         const fetchUploadedFiles = async () => {
          
-            const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/list/', {
+            const response = await fetch('http://localhost:8000/api/qa/documents/', {
                 method: 'GET',
 
             });
@@ -219,30 +220,8 @@ export const AdminDashboard = () => {
                         </div>
                     </div>
                 )}
-
-                <div className="sidenav">
-                    <div className="logo">
-                        <img src={LogoSvg} alt="Logo" />
-                    </div>
-                   
-                    <ul>
-                        <li ><span>Hi {user.first_name}</span></li>
-                        <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
-                        <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
-                        {user.is_admin && (
-                        <>
-                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
-                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
-                            <li><Link to="/class/management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
-                        </>
-                    )}
-                    {user.is_sub_admin && !user.is_admin && (
-                        <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
-                        <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
-                    </ul>
-                </div>
-
+                <SideNav/>
+              
                 <div className="main-content">
                     <div className="page-content">
                         <div className="container-fluid">

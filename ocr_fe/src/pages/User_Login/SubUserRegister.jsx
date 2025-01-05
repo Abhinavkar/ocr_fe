@@ -11,6 +11,7 @@ import DownloadPng from "../../assets/images/download.png";
 import LogoutPng from "../../assets/images/logout.png";
 import CareersPng from "../../assets/images/careers.png"
 import { Link } from 'react-router-dom';
+import SideNav from '../../components/SideNav';
 export const SubUserRegister = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext); // Access user data from context
@@ -74,26 +75,7 @@ export const SubUserRegister = () => {
 
     return (
         <div className="user-register-page">
-            <div className="sidenav">
-                    <div className="logo">
-                        <img src={LogoSvg} alt="Logo" />
-                    </div>
-                   
-                    <ul>
-                        {/* <li ><span>Hi {user.first_name}</span></li> */}
-                        <li ><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
-                        <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
-                        {user.is_admin && (
-                        <>
-                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                            <li><Link to="/add-subadmin"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
-                        </>
-                    )}
-                    {user.is_sub_admin && !user.is_admin && (
-                        <li className="active" ><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
-                        <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
-                    </ul>
-                </div>
+            <SideNav/>
             <div className="main-content">
                 <div className="login-container">
                     <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />
