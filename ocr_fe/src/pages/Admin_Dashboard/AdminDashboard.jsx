@@ -13,11 +13,11 @@ import ArrowDownSvg from "../../assets/images/arrow-down.svg";
 
 export const AdminDashboard = () => {
     const navigate = useNavigate();
-    const { user } = useContext(UserContext); 
+    const { user } = useContext(UserContext);
     const [classSelected, setClassSelected] = useState('');
     const [sectionSelected, setSectionSelected] = useState('');
     const [subjectSelected, setSubjectSelected] = useState('');
-    const [uploadType, setUploadType] = useState('pdf'); 
+    const [uploadType, setUploadType] = useState('pdf');
     const [coursePdf, setCoursePdf] = useState(null);
     const [questionImage, setQuestionImage] = useState(null);
     const [message, setMessage] = useState('');
@@ -26,12 +26,15 @@ export const AdminDashboard = () => {
     const [sections, setSections] = useState([]);
     const [subjects, setSubjects] = useState([]);
     const [examid, setExamid] = useState('');
-    const [isUploading, setIsUploading] = useState(false); 
+    const [isUploading, setIsUploading] = useState(false);
+    const [documents, setDocuments] = useState([]);
+    const [error, setError] = useState("");
+
     console.log("User:", user);
 
     useEffect(() => {
         const fetchUploadedFiles = async () => {
-         
+
             const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/list/', {
                 method: 'GET',
 
@@ -50,27 +53,49 @@ export const AdminDashboard = () => {
             if (response.ok) {
                 const data = await response.json();
                 setClasses(data);
-             
+
+            }
+        };
+        const fetchDocuments = async () => {
+            try {
+                const response = await fetch(' http://localhost:8000/api/services/documents-list/', {
+                    method: 'GET',
+                    headers: {
+                        'userId': user.id,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setUploadedFiles(data.documents || []);
+                } else {
+                    console.error("Failed to fetch documents:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Error fetching documents:", error);
             }
         };
 
-      
+
+
         fetchUploadedFiles();
         fetchClassApi();
+        fetchDocuments();
     }, [user.organization_id]);
 
     const fetchSectionApi = async (classId) => {
         const response = await fetch(`http://localhost:8000/api/services/sections/${classId}/`, {
-        method: 'GET',
+            method: 'GET',
         });
 
         if (response.ok) {
-        const data = await response.json();
-        console.log(data)
-        setSections(data || []);
-        if (data.length > 0) {
-            fetchSubjectApi(data[0].id); 
-        }
+            const data = await response.json();
+            console.log(data)
+            setSections(data || []);
+            if (data.length > 0) {
+                fetchSubjectApi(data[0].id);
+            }
         }
     };
     const fetchSubjectApi = async (sectionId) => {
@@ -104,7 +129,7 @@ export const AdminDashboard = () => {
         localStorage.removeItem('is_admin');
         navigate('/');
     };
-    const handleNavigateResult=()=>{
+    const handleNavigateResult = () => {
         navigate('/result')
     }
 
@@ -115,29 +140,29 @@ export const AdminDashboard = () => {
             return;
         }
 
-        setIsUploading(true); 
+        setIsUploading(true);
 
         const formData = new FormData();
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
-        formData.append("section_selected",sectionSelected)
+        formData.append("section_selected", sectionSelected)
         formData.append('exam_id', examid);
         formData.append('upload_type', uploadType);
-        
+
         if (uploadType === 'pdf' && coursePdf) {
             formData.append('course_pdf', coursePdf);
             try {
 
                 const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
                     method: 'POST',
-                   
+
                     body: formData,
                 });
-    
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     setMessage(errorData.message || "An error occurred during the upload.");
-                    setIsUploading(false); 
+                    setIsUploading(false);
                     return;
                 }
                 const responseData = await response.json();
@@ -146,7 +171,7 @@ export const AdminDashboard = () => {
             } catch (error) {
                 setMessage("Your Document has been uploaded Successfully");
             } finally {
-                setIsUploading(false); 
+                setIsUploading(false);
             }
         }
         if (uploadType === 'image' && questionImage) {
@@ -155,14 +180,14 @@ export const AdminDashboard = () => {
 
                 const response = await fetch('http://localhost:8000/api/qa/admin/upload/question-pdf/', {
                     method: 'POST',
-                   
+
                     body: formData,
                 });
-    
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     setMessage(errorData.message || "An error occurred during the upload.");
-                    setIsUploading(false); 
+                    setIsUploading(false);
                     return;
                 }
                 const responseData = await response.json();
@@ -171,11 +196,11 @@ export const AdminDashboard = () => {
             } catch (error) {
                 setMessage("Your Document has been uploaded Successfully");
             } finally {
-                setIsUploading(false); 
+                setIsUploading(false);
             }
         }
 
-       
+
     };
 
     const handleNavigateAddUser = () => {
@@ -224,21 +249,21 @@ export const AdminDashboard = () => {
                     <div className="logo">
                         <img src={LogoSvg} alt="Logo" />
                     </div>
-                   
+
                     <ul>
                         <li ><span>Hi {user.first_name}</span></li>
                         <li className="active"><Link to="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</Link></li>
                         <li><Link to="/result"><span><img src={DownloadPng} alt="Download" /></span>Result Download</Link></li>
                         {user.is_admin && (
-                        <>
-                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
-                            <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
-                            <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
-                            <li><Link to="/class/management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
-                        </>
-                    )}
-                    {user.is_sub_admin && !user.is_admin && (
-                        <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>                    )}
+                            <>
+                                <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>
+                                <li><Link to="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</Link></li>
+                                <li><Link to="/user-management"><span><img src={CareersPng} alt="User Management" /></span>User Management</Link></li>
+                                <li><Link to="/class/management"><span><img src={CareersPng} alt="User Management" /></span>Class Management</Link></li>
+                            </>
+                        )}
+                        {user.is_sub_admin && !user.is_admin && (
+                            <li><Link to="/user/register/"><span><img src={CareersPng} alt="Add User" /></span>Add User</Link></li>)}
                         <li><Link to="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</Link></li>
                     </ul>
                 </div>
@@ -263,7 +288,7 @@ export const AdminDashboard = () => {
                                             </div>
                                         </div>
                                         <div className="form-group d-flex">
-                                        <label className="col-sm-3 col-form-label label">Sections</label>
+                                            <label className="col-sm-3 col-form-label label">Sections</label>
                                             <div className="col-sm-9">
                                                 <select className="form-control" value={sectionSelected} onChange={handleSectionChange}>
                                                     <option value="">Select Section</option>
@@ -276,11 +301,11 @@ export const AdminDashboard = () => {
                                         <div className="form-group d-flex">
                                             <label className="col-sm-3 col-form-label label">Subject</label>
                                             <div className="col-sm-9">
-                                                <select 
-                                                    className="form-control" 
-                                                    value={subjectSelected} 
-                                                    onChange={(e) => setSubjectSelected(e.target.value)} 
-                                                    disabled={!classSelected} 
+                                                <select
+                                                    className="form-control"
+                                                    value={subjectSelected}
+                                                    onChange={(e) => setSubjectSelected(e.target.value)}
+                                                    disabled={!classSelected}
                                                 >
                                                     <option value="">Select</option>
                                                     {subjects.map((subjectItem) => (
@@ -301,12 +326,12 @@ export const AdminDashboard = () => {
                                     <div className="row-md-6 d-flex ps-5 align-items-center upfile">
                                         <form className="formUpload" onSubmit={handleFileUpload}>
                                             <div className="form-group d-flex">
-                                            <label className="col-sm-7 col-form-label label">Upload</label>
+                                                <label className="col-sm-7 col-form-label label">Upload</label>
                                                 <div className="col-sm-9">
-                                                    <select 
-                                                        id="uploadType" 
-                                                        className="form-control" 
-                                                        value={uploadType} 
+                                                    <select
+                                                        id="uploadType"
+                                                        className="form-control"
+                                                        value={uploadType}
                                                         onChange={(e) => setUploadType(e.target.value)}
                                                     >
                                                         <option value="pdf">Course PDF</option>
@@ -319,11 +344,11 @@ export const AdminDashboard = () => {
                                                 <div className="upload-files-container">
                                                     <span className="upload-icon"><img src={UploadPng} alt="Upload" /></span>
                                                     <h3 className="dynamic-message">Upload COURSE PDF</h3>
-                                                    <input 
-                                                        type="file" 
-                                                        onChange={(e) => setCoursePdf(e.target.files[0])} 
-                                                        accept=".pdf" 
-                                                        className="default-file-input" 
+                                                    <input
+                                                        type="file"
+                                                        onChange={(e) => setCoursePdf(e.target.files[0])}
+                                                        accept=".pdf"
+                                                        className="default-file-input"
                                                     />
                                                 </div>
                                             )}
@@ -332,11 +357,11 @@ export const AdminDashboard = () => {
                                                 <div className="upload-files-container">
                                                     <span className="upload-icon"><img src={UploadPng} alt="Upload" /></span>
                                                     <h3 className="dynamic-message">Upload Question Paper</h3>
-                                                    <input 
-                                                        type="file" 
-                                                        onChange={(e) => setQuestionImage(e.target.files[0])} 
-                                                        accept="image/*,.pdf" 
-                                                        className="default-file-input" 
+                                                    <input
+                                                        type="file"
+                                                        onChange={(e) => setQuestionImage(e.target.files[0])}
+                                                        accept="image/*,.pdf"
+                                                        className="default-file-input"
                                                     />
                                                 </div>
                                             )}
@@ -365,16 +390,16 @@ export const AdminDashboard = () => {
                                         </thead>
                                         <tbody>
                                             {uploadedFiles.length > 0 ? (
-                                                uploadedFiles.map((file, index) => (
+                                                uploadedFiles.map((pdf_book, question, index) => (
                                                     <tr key={index}>
-                                                        <td>{file.class}</td>
-                                                        <td>{file.subject}</td>
-                                                        <td>{file.pdf_name}</td>
-                                                        <td>{file.question_name}</td>
+                                                        <td>{question.classSelected}</td>
+                                                        <td>{question.subjectSelected}</td>
+                                                        <td>{pdf_book.pdf_file_path}</td>
+                                                        <td>{question.question_file_path}</td>
                                                         <td>
                                                             <button
-                                                            onClick={() => handleDelete(file.pdf_name)}
-                                                            className="btn btn-danger"
+                                                                onClick={() => handleDelete(pdf_book.pdf_file_path)}
+                                                                className="btn btn-danger"
                                                             >Delete</button>
                                                         </td>
                                                     </tr>
