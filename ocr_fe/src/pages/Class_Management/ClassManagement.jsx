@@ -45,10 +45,11 @@ const ClassManagement = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'userId':user._id,
+                'userId':user.id,
             },
             body: JSON.stringify({
                 name: newClassName,
+                organization_id: user.organization_id,  
                
             }),
         });
@@ -97,8 +98,7 @@ const ClassManagement = () => {
             setUpdateClassId(null);
             setUpdateClassName('');
             try {
-
-
+                navigate('/dashboard');
                         }
             catch{
                 console.error("error");
@@ -106,6 +106,7 @@ const ClassManagement = () => {
             }
             finally{
                 setIsModalOpen(false);
+
 
             }
           
@@ -119,21 +120,7 @@ const ClassManagement = () => {
         setIsModalOpen(false);
     };
 
-    const SideNav = () => (
-        <div className="sidenav">
-            <div className="logo">
-                <img src={LogoSvg} alt="Logo" />
-            </div>
-            <ul>
-                <li><a href="/dashboard"><span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard</a></li>
-                <li><a href="/results"><span><img src={DownloadPng} alt="Download" /></span>Results</a></li>
-                <li><a href="/user/register"><span><img src={CareersPng} alt="Add User" /></span>Add User</a></li>
-                <li><a href="/sub-user/register"><span><img src={CareersPng} alt="Add Subadmin" /></span>Add Subadmin</a></li>
-                <li className="active"><a href="/class-management"><span><img src={CareersPng} alt="Class Management" /></span>Class Management</a></li>
-                <li><a href="/" onClick={handleLogout}><span><img src={LogoutPng} alt="Logout" /></span>Logout</a></li>
-            </ul>
-        </div>
-    );
+ 
 
     return (
         <div className="class-management-page">
