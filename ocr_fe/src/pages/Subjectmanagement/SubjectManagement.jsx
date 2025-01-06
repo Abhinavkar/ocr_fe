@@ -63,7 +63,7 @@ const SubjectManagement = () => {
 
         const fetchSections = async () => {
             try {
-                const response = await fetch(`${SECTION_API_BASE_URL}/${selectedClassId}/`, {
+                const response = await fetch(`http://localhost:8000/api/services/org/sections/${user.organization_id}/`, {
                     method: 'GET',
                 });
 
@@ -99,7 +99,7 @@ const SubjectManagement = () => {
 
     const handleAddSubject = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/`, {
+            const response = await fetch(`http://localhost:8000/api/services/subjects/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const SubjectManagement = () => {
 
     const handleDeleteSubject = async (subjectId) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete/${subjectId}/`, {
+            const response = await fetch(`http://localhost:8000/api/services/delete/subjects/${subjectId}/`, {
                 method: 'DELETE',
                 headers: {
                     userId: user.id,
@@ -168,7 +168,7 @@ const SubjectManagement = () => {
 
     const handleUpdateOk = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/update/${selectedSubjectId}/`, {
+            const response = await fetch(`http://localhost:8000/api/services/sections/update/${subjectId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -211,9 +211,8 @@ const SubjectManagement = () => {
         },
         {
             title: 'Section Name',
-            dataIndex: 'section_id',
-            key: 'section_id',
-            render: (section_id) => getSectionNameById(section_id),
+            dataIndex: 'section_name',
+            key: 'section_name',
         },
         {
             title: 'Subject Name',
