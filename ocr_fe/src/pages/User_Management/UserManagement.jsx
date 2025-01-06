@@ -49,7 +49,7 @@ const UserManagement = () => {
     const handleSaveUser = async () => {
         try {
             const values = form.getFieldsValue();
-            const response = await fetch(`${API_BASE_URL}/update/${selectedUser.id}/`, {
+            const response = await fetch(`${API_BASE_URL}/update/${selectedUser._id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const UserManagement = () => {
 
             const updatedUser = await response.json();
             setUsers((prevUsers) =>
-                prevUsers.map((user) => (user.id === selectedUser.id ? updatedUser : user))
+                prevUsers.map((user) => (user._id === selectedUser._id ? updatedUser : user))
             );
             setIsModalVisible(false);
             message.success('User updated successfully');
@@ -74,7 +74,7 @@ const UserManagement = () => {
 
     const handleDeleteUser = async (userId) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete/${userId}/`, {
+            const response = await fetch(`${API_BASE_URL}/users/${userId}/`, {
                 method: 'DELETE',
                 headers: {
                     userId: user.id,
@@ -83,7 +83,7 @@ const UserManagement = () => {
 
             if (!response.ok) throw new Error('Failed to delete user.');
 
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+            setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
             message.success('User deleted successfully');
         } catch (error) {
             console.error(error.message);
@@ -113,6 +113,45 @@ const UserManagement = () => {
             key: 'email',
         },
         {
+            title: 'Is Admin',
+            dataIndex: 'is_admin',
+            key: 'is_admin',
+            render: (text) => (text ? 'Yes' : 'No'),
+        },
+        // {
+        //     title: 'Is Super Staff',
+        //     dataIndex: 'is_super_staff',
+        //     key: 'is_super_staff',
+        //     render: (text) => (text ? 'Yes' : 'No'),
+        // },
+        {
+            title: 'Is Sub Admin',
+            dataIndex: 'is_sub_admin',
+            key: 'is_sub_admin',
+            render: (text) => (text ? 'Yes' : 'No'),
+        },
+        {
+            title: 'Is User',
+            dataIndex: 'is_user',
+            key: 'is_user',
+            render: (text) => (text ? 'Yes' : 'No'),
+        },
+        {
+            title: 'Department',
+            dataIndex: 'department',
+            key: 'department',
+        },
+        {
+            title: 'Class Assigned',
+            dataIndex: 'department_name',
+            key: 'department_name',
+        },
+        {
+            title: 'Section Assigned',
+            dataIndex: 'section_name',
+            key: 'section_name',
+        },
+        {
             title: 'Action',
             key: 'action',
             render: (text, record) => (
@@ -120,7 +159,7 @@ const UserManagement = () => {
                     <Button type="primary" onClick={() => showEditModal(record)}>
                         Edit
                     </Button>
-                    <Button type="danger" onClick={() => handleDeleteUser(record.id)} style={{ marginLeft: 8 }}>
+                    <Button type="danger" onClick={() => handleDeleteUser(record._id)} style={{ marginLeft: 8 }}>
                         Delete
                     </Button>
                 </>
@@ -132,8 +171,10 @@ const UserManagement = () => {
         <div className="user-management-page">
             <SideNav />
             <div className="user-management-content">
-                <h2>User Management</h2>
-                <Table columns={columns} dataSource={users} rowKey="id" style={{ marginTop: 20 }} />
+               <div className='UserManagementHeader'>
+               <h2>{user.organization } User DataBase</h2>
+               </div>
+                <Table columns={columns} dataSource={users} rowKey="_id" style={{ marginTop: 20 }} />
                 <Modal
                     title="Edit User"
                     visible={isModalVisible}
@@ -152,6 +193,24 @@ const UserManagement = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item name="email" label="Email">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="is_admin" label="Is Admin">
+                            <Input type="checkbox" />
+                        </Form.Item>
+                        <Form.Item name="is_super_staff"  label="Is Super Staff">
+                            <Input type="checkbox" disabled/>
+                        </Form.Item>
+                        <Form.Item name="is_sub_admin" label="Is Sub Admin">
+                            <Input type="checkbox" />
+                        </Form.Item>
+                        <Form.Item name="is_user" label="Is User">
+                            <Input type="checkbox" />
+                        </Form.Item>
+                        <Form.Item name="department" label="Department">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="section_assigned" label="Section Assigned">
                             <Input />
                         </Form.Item>
                     </Form>

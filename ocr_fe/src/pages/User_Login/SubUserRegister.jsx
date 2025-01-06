@@ -5,13 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from '../../UserContext';
-import LogoSvg from "../../assets/images/logo.svg";
-import DashboardPng from "../../assets/images/dashboard.png";
-import DownloadPng from "../../assets/images/download.png";
-import LogoutPng from "../../assets/images/logout.png";
-import CareersPng from "../../assets/images/careers.png"
-import { Link } from 'react-router-dom';
 import SideNav from '../../components/SideNav';
+
 export const SubUserRegister = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext); // Access user data from context
@@ -22,22 +17,40 @@ export const SubUserRegister = () => {
     const [email, setEmail] = useState('');
     const [sectionAssigned, setSectionAssigned] = useState('');
     const [department, setDepartment] = useState('');
-    const [organization, setOrganization] = useState('');
-    const [organizations, setOrganizations] = useState([]);
+    const [departments, setDepartments] = useState([]);
+    const [sections, setSections] = useState([]);
 
     useEffect(() => {
-        const fetchOrganizations = async () => {
-            const response = await fetch('http://localhost:8000/api/services/get/organization/', {
+        const fetchDepartments = async () => {
+            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
             const data = await response.json();
-            setOrganizations(data);
+            setDepartments(data);
         };
-        fetchOrganizations();
-    }, []);
+
+        fetchDepartments();
+    }, [user.organization_id]);
+
+    useEffect(() => {
+        const fetchSections = async () => {
+            if (department) {
+                const response = await fetch(`http://localhost:8000/api/services/sections/${department}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                setSections(data);
+            }
+        };
+
+        fetchSections();
+    }, [department]);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -55,7 +68,7 @@ export const SubUserRegister = () => {
                 email,
                 section_assigned: sectionAssigned,
                 department,
-                organization: user.organization_id,
+                organization: user.organization_id
             }),
         });
 
@@ -67,15 +80,9 @@ export const SubUserRegister = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('is_admin');
-        navigate('/');
-    };
-
     return (
         <div className="user-register-page">
-            <SideNav/>
+            <SideNav />
             <div className="main-content">
                 <div className="login-container">
                     <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />
@@ -83,7 +90,6 @@ export const SubUserRegister = () => {
                     <form onSubmit={handleRegister}>
                         <div className="form-group">
                             <label htmlFor="organization">Organization : {user.organization}</label>
-                            {/* <input disabled>{user.organization}</input> */}
                         </div>
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
@@ -146,28 +152,36 @@ export const SubUserRegister = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sectionAssigned">Section Assigned</label>
-                            <input
-                                type="text"
-                                id="sectionAssigned"
-                                name="sectionAssigned"
-                                value={sectionAssigned}
-                                onChange={(e) => setSectionAssigned(e.target.value)}
-                                required
-                                className="form-control"
-                            />
-                        </div>
-                        <div className="form-group">
                             <label htmlFor="department">Department</label>
-                            <input
-                                type="text"
+                            <select
                                 id="department"
                                 name="department"
                                 value={department}
                                 onChange={(e) => setDepartment(e.target.value)}
                                 required
                                 className="form-control"
-                            />
+                            >
+                                <option value="">Select Department</option>
+                                {departments.map(dept => (
+                                    <option key={dept._id} value={dept._id}>{dept.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="sectionAssigned">Section Assigned</label>
+                            <select
+                                id="sectionAssigned"
+                                name="sectionAssigned"
+                                value={sectionAssigned}
+                                onChange={(e) => setSectionAssigned(e.target.value)}
+                                required
+                                className="form-control"
+                            >
+                                <option value="">Select Section</option>
+                                {sections.map(section => (
+                                    <option key={section._id} value={section._id}>{section.name}</option>
+                                ))}
+                            </select>
                         </div>
                         <button type="submit" className="btn-fill">Register</button>
                     </form>
@@ -177,3 +191,5 @@ export const SubUserRegister = () => {
         </div>
     );
 };
+
+export default SubUserRegister;
