@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './Result.css';
-import LogoSvg from "../../assets/images/logo.svg";
-import DashboardPng from "../../assets/images/dashboard.png";
-import DownloadPng from "../../assets/images/download.png";
-import LogoutPng from "../../assets/images/logout.png";
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
+import { Table, Button } from 'antd';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import SideNav from '../../components/SideNav';
 
 export const Result = () => {
@@ -21,10 +17,9 @@ export const Result = () => {
         const fetchResults = async () => {
             const response = await fetch('http://localhost:8000/api/qa/results/', {
                 method: 'GET',
-                // headers:{
-                //     "orgId":user.organization_id
-                    
-                // }
+                headers: {
+                    'userId': user.id,
+                },
             });
 
             if (response.ok) {
@@ -36,6 +31,9 @@ export const Result = () => {
         const fetchClasses = async () => {
             const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
                 method: 'GET',
+                headers: {
+                    'userId': user.id,
+                },
             });
 
             if (response.ok) {
@@ -44,21 +42,24 @@ export const Result = () => {
             }
         };
 
-        // const fetchSection = async () => {
-        //     const response = await fetch(`http://localhost:8000/api/services/sections/`, {
-        //         method: 'GET',
-        //     });
+        const fetchSection = async () => {
+            const response = await fetch(`http://localhost:8000/api/services/sections/`, {
+                method: 'GET',
+                headers: {
+                    'userId': user.id,
+                },
+            });
 
-        //     if (response.ok) {
-        //         const data = await response.json();
-        //         setSections(data);
-        //     }
-        // };
+            if (response.ok) {
+                const data = await response.json();
+                setSections(data);
+            }
+        };
 
-        // fetchSection();
+        fetchSection();
         fetchResults();
         fetchClasses();
-    }, [user.organization_id]);
+    }, [user.organization_id, user.id]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -82,74 +83,129 @@ export const Result = () => {
         // Add title
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
-        doc.text('Student Result Card', 105, 20, null, null, 'center');
+        doc.setTextColor(0, 0, 128); // Dark blue color
+        doc.text('Student Result Card', 105, 20, { align: 'center' });
 
         // Add organization name
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
-        doc.text(user.organization, 105, 30, null, null, 'center');
+        doc.setTextColor(0, 0, 0); // Black color
+        doc.text(`${user.organization}`, 105, 30, { align: 'center' });
 
         // Add a line separator
         doc.setLineWidth(0.5);
+        doc.setDrawColor(0, 0, 0); // Black color
         doc.line(10, 35, 200, 35);
 
-        // Add student details
+        // Add student details with labels and values in different colors
         doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(0, 0, 0); // Black color
+        doc.text('Document ID:', 10, 45);
+        doc.text('Exam ID:', 10, 55);
+        doc.text('Class:', 10, 65);
+        doc.text('Section:', 10, 75);
+        doc.text('Subject:', 10, 85);
+        doc.text('Roll No:', 10, 95);
+        doc.text('Score:', 10, 105);
+        doc.text('Document Uploaded By:', 10, 115);
+
         doc.setFont('helvetica', 'normal');
-        doc.text(`Document ID: ${result.document_id}`, 10, 45);
-        doc.text(`Exam ID: ${result.exam_id}`, 10, 55);
-        doc.text(`Class: ${getClassById(result.class_id)}`, 10, 65);
-        doc.text(`Section: A`, 10, 75);
-        doc.text(`Subject: Physics`, 10, 85);
-        doc.text(`Roll No: ${result.roll_no}`, 10, 95);
-        doc.text(`Score: 86%`, 10, 105);
-        doc.text(`Document Uploaded By: Abhinav Kar`, 10, 115);
+        doc.setTextColor(0, 0, 128); // Dark blue color
+        doc.text(`${result.document_id}`, 60, 45);
+        doc.text(`${result.exam_id}`, 60, 55);
+        doc.text(getClassById(result.class_id), 60, 65);
+        doc.text(getSectionById(result.section_id), 60, 75);
+        doc.text(`${result.subject}`, 60, 85);
+        doc.text(`${result.roll_no}`, 60, 95);
+        doc.text(`${result.similarity_score}`, 60, 105);
+        doc.text('Abhinav Kar', 60, 115); // Replace with actual uploader if available
 
         // Add a footer
         doc.setFontSize(10);
         doc.setFont('helvetica', 'italic');
-        doc.text('Generated by OCR System', 105, 285, null, null, 'center');
+        doc.setTextColor(128, 128, 128); // Gray color
+        doc.text('Generated by OCR System', 105, 285, { align: 'center' });
 
-        doc.save(`result_${result.document_id}.pdf`);
+        doc.save(`result_${result._id}.pdf`);
     };
+
+    const columns = [
+        {
+            title: 'S No',
+            dataIndex: 'sno',
+            key: 'sno',
+            render: (text, record, index) => index + 1,
+        },
+        {
+            title: 'Exam ID',
+            dataIndex: 'exam_id',
+            key: 'exam_id',
+        },
+        {
+            title: 'Class',
+            dataIndex: 'class_id',
+            key: 'class_id',
+            render: (text) => getClassById(text),
+        },
+        {
+            title: 'Section',
+            dataIndex: 'section_id',
+            key: 'section_id',
+            render: (text) => getSectionById(text),
+        },
+        {
+            title: 'Subject',
+            dataIndex: 'subject',
+            key: 'subject',
+        },
+        {
+            title: 'Roll No',
+            dataIndex: 'roll_no',
+            key: 'roll_no',
+        },
+        {
+            title: 'Score',
+            dataIndex: 'similarity_score',
+            key: 'similarity_score',
+        },
+        {
+            title: 'Document Uploaded By',
+            dataIndex: 'uploaded_by',
+            key: 'uploaded_by',
+            render: () => 'Abhinav Kar', // Replace with actual uploader if available
+        },
+        {
+            title: 'Get Report',
+            key: 'action',
+            render: (text, record) => (
+                <Button onClick={() => handleDownload(record)}>Download</Button>
+            ),
+        },
+        {
+            title: 'Reevaluate',
+            key: 'action',
+            render: (text, record) => (
+                <Button>Reevaluate</Button>
+            ),
+        },
+        {
+            title: 'Delete',
+            key: 'action',
+            render: (text, record) => (
+                <Button>Delete</Button>
+            ),
+
+        }
+    ];
 
     return (
         <div className="result-page">
-           <SideNav />
+            <SideNav />
             <div className="result-content">
                 <div className="result-container">
                     <h2>{user.organization} Results</h2>
-                    <table className="result-table">
-                        <thead>
-                            <tr>
-                                <th>S No</th>
-                                <th>Exam ID</th>
-                                <th>Class</th>
-                                <th>Section</th>
-                                <th>Subject</th>
-                                <th>Roll No</th>
-                                <th>Score</th>
-                                <th>Document Uploaded By</th>
-                                <th>Get Report</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {results.map((result, i) => (
-                                <tr key={result.document_id}>
-                                    <td>{i + 1}</td>
-                                    <td>{result.exam_id}</td>
-                                    <td>{getClassById(result.class_id)}</td>
-                                    <td>{result.section}</td>
-                                    <td>{result.subject}</td>
-                                    <td>{result.roll_no}</td>
-                                    <td>{result.similarity_score}</td>
-                                    
-                                    <td>Abhinav Kar</td>
-                                    <td><button onClick={() => handleDownload(result)}>Download</button></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <Table columns={columns} dataSource={results} rowKey="document_id" />
                 </div>
                 <div>
                     Result Reevaluation Section

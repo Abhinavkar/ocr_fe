@@ -1,0 +1,9 @@
+.user-management-page {
+    display: flex;
+}
+
+.user-management-content {
+    margin-left: 250px; /* Adjust this value based on the width of your SideNav */
+    padding: 20px;
+    width: 100%;
+}

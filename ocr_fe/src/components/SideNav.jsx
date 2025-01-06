@@ -9,6 +9,7 @@ import DownloadPng from "../assets/images/download.png";
 import LogoutPng from "../assets/images/logout.png";
 import CareersPng from "../assets/images/careers.png";
 import './SideNav.css';
+import MenuItem from 'antd/es/menu/MenuItem';
 
 const SideNav = () => {
     const { user } = useContext(UserContext);
@@ -31,12 +32,12 @@ const SideNav = () => {
                         <Link to="/sub-user/register">Add Subadmin</Link>
                     </Menu.Item>
                     <Menu.Item key="3">
-                        <Link to="/user-management">User Management</Link>
+                        <Link to="/user/management">User Management</Link>
                     </Menu.Item>
                     <Menu.Item key="4">
                         <Link to="/class/management">Class Management</Link>
                     </Menu.Item>
-                    <Menu.Item key="6">
+                    <Menu.Item key="5">
                         <Link to="/section/management">Section Management</Link>
                     </Menu.Item>
                 </>
@@ -61,11 +62,7 @@ const SideNav = () => {
                         <span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard
                     </Link>
                 </li>
-                <li>
-                    <Link to="/result">
-                        <span><img src={DownloadPng} alt="Download" /></span>Result Download
-                    </Link>
-                </li>
+          
                 {(user.is_admin || user.is_sub_admin) && (
                     <li>
                         <Dropdown overlay={managementMenu} trigger={['click']}>
@@ -75,6 +72,14 @@ const SideNav = () => {
                         </Dropdown>
                     </li>
                 )}
+                <li>
+                
+                </li>
+                      <li>
+                    <Link to="/result">
+                        <span><img src={DownloadPng} alt="Download" /></span>Result Download
+                    </Link>
+                </li>
                 <li>
                     <Link to="/" onClick={handleLogout}>
                         <span><img src={LogoutPng} alt="Logout" /></span>Logout
