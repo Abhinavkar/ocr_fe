@@ -1,32 +1,29 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import LogoSvg from "../../assets/images/logo.svg";
-import DashboardPng from "../../assets/images/dashboard.png";
-import DownloadPng from "../../assets/images/download.png";
-import LogoutPng from "../../assets/images/logout.png";
-import CareersPng from "../../assets/images/careers.png";
-import './ClassManagement.css';
 import { UserContext } from '../../UserContext';
+import { Form, Input, Button, Table, Modal, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import SideNav from '../../components/SideNav';
+import './ClassManagement.css';
 
 const API_BASE_URL = 'http://localhost:8000/api/services/classes';
 
 const ClassManagement = () => {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const [classes, setClasses] = useState([]);
     const [newClassName, setNewClassName] = useState('');
-    const [updateClassId, setUpdateClassId] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedClassId, setSelectedClassId] = useState(null);
     const [updateClassName, setUpdateClassName] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const { user } = useContext(UserContext);
 
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                setIsLoading(true);
-                const response = await fetch(`${API_BASE_URL}/676d5062b1f7e1e5c223eace/`, {
+                const response = await fetch(`${API_BASE_URL}/${user.organization_id}`, {
                     method: 'GET',
+                    headers: {
+                        userId: user.id,
+                    },
                 });
 
                 if (!response.ok) throw new Error('Failed to fetch classes.');
@@ -35,20 +32,13 @@ const ClassManagement = () => {
                 setClasses(data);
             } catch (error) {
                 console.error(error.message);
-            } finally {
-                setIsLoading(false);
             }
         };
 
         fetchClasses();
-    }, []);
+    }, [user.id]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('is_admin');
-        navigate('/');
-    };
-
-    const handleCreateClass = async () => {
+    const handleAddClass = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/`, {
                 method: 'POST',
@@ -56,10 +46,7 @@ const ClassManagement = () => {
                     'Content-Type': 'application/json',
                     userId: user.id,
                 },
-                body: JSON.stringify({
-                    name: newClassName,
-                    organization_id: user.organization_id,
-                }),
+                body: JSON.stringify({ name: newClassName,organization_id: user.organization_id }),
             });
 
             if (!response.ok) throw new Error('Failed to create class.');
@@ -67,8 +54,10 @@ const ClassManagement = () => {
             const newClass = await response.json();
             setClasses((prevClasses) => [...prevClasses, newClass]);
             setNewClassName('');
+            message.success('Class added successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to add class');
         }
     };
 
@@ -84,125 +73,116 @@ const ClassManagement = () => {
             if (!response.ok) throw new Error('Failed to delete class.');
 
             setClasses((prevClasses) => prevClasses.filter((classItem) => classItem.id !== classId));
-            setTimeout
-            navigate('/class/management');
+            message.success('Class deleted successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to delete class');
         }
     };
 
-    const handleUpdateClass = (classId) => {
-        const classToUpdate = classes.find((classItem) => classItem.id === classId);
-        setUpdateClassId(classId);
-        setUpdateClassName(classToUpdate?.name || '');
-        setIsModalOpen(true);
+    const showDeleteModal = (classId) => {
+        setSelectedClassId(classId);
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        handleDeleteClass(selectedClassId);
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleUpdateClass = (classId, className) => {
+        setSelectedClassId(classId);
+        setUpdateClassName(className);
+        setIsModalVisible(true);
     };
 
     const handleSaveUpdateClass = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/update/${updateClassId}/`, {
+            const response = await fetch(`${API_BASE_URL}/update/${selectedClassId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     userId: user.id,
                 },
-                body: JSON.stringify({
-                    name: updateClassName,
-                }),
+                body: JSON.stringify({ name: updateClassName }),
             });
 
             if (!response.ok) throw new Error('Failed to update class.');
 
             const updatedClass = await response.json();
             setClasses((prevClasses) =>
-                prevClasses.map((classItem) => (classItem.id === updateClassId ? updatedClass : classItem))
+                prevClasses.map((classItem) =>
+                    classItem.id === selectedClassId ? updatedClass : classItem
+                )
             );
-            setIsModalOpen(false);
-            setUpdateClassId(null);
-            setUpdateClassName('');
+            setIsModalVisible(false);
+            message.success('Class updated successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to update class');
         }
     };
 
-    const handleCancelUpdate = () => {
-        setIsModalOpen(false);
-        setUpdateClassId(null);
-        setUpdateClassName('');
-    };
+    const columns = [
+        {
+            title: 'Class Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <>
+                    <Button type="primary" onClick={() => handleUpdateClass(record._id, record.name)}>
+                        Edit
+                    </Button>
+                    <Button danger  onClick={() => showDeleteModal(record._id)} style={{ marginLeft: 8 }}>
+                        Delete
+                    </Button>
+                </>
+            ),
+        },
+    ];
 
     return (
         <div className="class-management-page">
             <SideNav />
-            <div className="main-content">
-                <div className="class-management-container">
-                    <h2>Class Management</h2>
-
-                    <div className="create-class-form">
-                        <input
-                            type="text"
-                            placeholder="Class Name"
+            <div className="class-management-content">
+                <h2>Class Management</h2>
+                <Form layout="inline" onFinish={handleAddClass}>
+                    <Form.Item>
+                        <Input
+                            placeholder="New Class Name"
                             value={newClassName}
                             onChange={(e) => setNewClassName(e.target.value)}
                         />
-                        <button onClick={handleCreateClass} disabled={!newClassName.trim()}>
-                            Create Class
-                        </button>
-                    </div>
-
-                    {isLoading ? (
-                        <p>Loading classes...</p>
-                    ) : (
-                        <table className="class-table">
-                            <thead>
-                                <tr>
-                                    <th>S No</th>
-                                    <th>Class Name</th>
-                                    
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {classes.length > 0 ? (
-                                    classes.map((classItem,i) => (
-                                        <tr key={classItem._id}>
-                                            <td>{i+1}</td>
-                                            <td>{classItem.name}</td>
-                                           
-                                            <td>
-                                                <button onClick={() => handleDeleteClass(classItem._id)}>Delete</button>
-                                                <button onClick={() => handleUpdateClass(classItem._id)}>Update</button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="4">No classes available</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Add Class
+                        </Button>
+                    </Form.Item>
+                </Form>
+                <Table columns={columns} dataSource={classes} rowKey="id" style={{ marginTop: 20 }} />
+                <Modal
+                    title="Update Class Name"
+                    visible={isModalVisible}
+                    onOk={handleSaveUpdateClass}
+                    onCancel={handleCancel}
+                    okText="Save"
+                >
+                    <Input
+                        placeholder="New Class Name"
+                        value={updateClassName}
+                        onChange={(e) => setUpdateClassName(e.target.value)}
+                    />
+                </Modal>
             </div>
-
-            {isModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h3>Update Class Name</h3>
-                        <input
-                            type="text"
-                            placeholder="New Class Name"
-                            value={updateClassName}
-                            onChange={(e) => setUpdateClassName(e.target.value)}
-                        />
-                        <button onClick={handleSaveUpdateClass} disabled={!updateClassName.trim()}>
-                            Save
-                        </button>
-                        <button onClick={handleCancelUpdate}>Cancel</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

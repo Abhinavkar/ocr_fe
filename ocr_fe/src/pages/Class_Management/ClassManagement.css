@@ -70,4 +70,12 @@
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
+}.class-management-page {
+    display: flex;
+}
+
+.class-management-content {
+    margin-left: 250px; /* Adjust this value based on the width of your SideNav */
+    padding: 20px;
+    width: 100%;
 }

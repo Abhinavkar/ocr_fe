@@ -32,12 +32,12 @@ const SideNav = () => {
                         <Link to="/sub-user/register">Add Subadmin</Link>
                     </Menu.Item>
                     <Menu.Item key="3">
-                        <Link to="/user-management">User Management</Link>
+                        <Link to="/user/management">User Management</Link>
                     </Menu.Item>
                     <Menu.Item key="4">
                         <Link to="/class/management">Class Management</Link>
                     </Menu.Item>
-                    <Menu.Item key="4">
+                    <Menu.Item key="5">
                         <Link to="/section/management">Section Management</Link>
                     </Menu.Item>
                 </>
