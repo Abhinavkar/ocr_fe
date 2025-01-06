@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Form, Input, Button, Table, Modal, message, Select } from 'antd';
 import './SubjectManagement.css';
 import { UserContext } from '../../UserContext';
 import SideNav from '../../components/SideNav';
 
+const { Option } = Select;
 const API_BASE_URL = 'http://localhost:8000/api/services/subjects';
 const CLASS_API_BASE_URL = 'http://localhost:8000/api/services/classes';
 const SECTION_API_BASE_URL = 'http://localhost:8000/api/services/sections';
@@ -16,9 +18,10 @@ const SubjectManagement = () => {
     const [newSubjectName, setNewSubjectName] = useState('');
     const [selectedClassId, setSelectedClassId] = useState('');
     const [selectedSectionId, setSelectedSectionId] = useState('');
-    const [updateSubjectId, setUpdateSubjectId] = useState(null);
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+    const [selectedSubjectId, setSelectedSubjectId] = useState(null);
     const [updateSubjectName, setUpdateSubjectName] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useContext(UserContext);
 
@@ -26,7 +29,7 @@ const SubjectManagement = () => {
         const fetchSubjects = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${API_BASE_URL}//`, {
+                const response = await fetch(`${API_BASE_URL}/${user.organization_id}/`, {
                     method: 'GET',
                 });
 
@@ -44,7 +47,7 @@ const SubjectManagement = () => {
 
         const fetchClasses = async () => {
             try {
-                const response = await fetch(`${CLASS_API_BASE_URL}//`, {
+                const response = await fetch(`${CLASS_API_BASE_URL}/${user.organization_id}/`, {
                     method: 'GET',
                 });
 
@@ -60,7 +63,7 @@ const SubjectManagement = () => {
 
         const fetchSections = async () => {
             try {
-                const response = await fetch(`${SECTION_API_BASE_URL}//`, {
+                const response = await fetch(`${SECTION_API_BASE_URL}/${user.class_id}/`, {
                     method: 'GET',
                 });
 
@@ -77,9 +80,9 @@ const SubjectManagement = () => {
         fetchSubjects();
         fetchClasses();
         fetchSections();
-    }, []);
+    }, [user.organization_id]);
 
-    const handleCreateSubject = async () => {
+    const handleAddSubject = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/`, {
                 method: 'POST',
@@ -102,8 +105,10 @@ const SubjectManagement = () => {
             setNewSubjectName('');
             setSelectedClassId('');
             setSelectedSectionId('');
+            message.success('Subject added successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to add subject');
         }
     };
 
@@ -119,50 +124,102 @@ const SubjectManagement = () => {
             if (!response.ok) throw new Error('Failed to delete subject.');
 
             setSubjects((prevSubjects) => prevSubjects.filter((subjectItem) => subjectItem._id !== subjectId));
+            message.success('Subject deleted successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to delete subject');
         }
     };
 
-    const handleUpdateSubject = (subjectId) => {
-        const subjectToUpdate = subjects.find((subjectItem) => subjectItem._id === subjectId);
-        setUpdateSubjectId(subjectId);
-        setUpdateSubjectName(subjectToUpdate?.name || '');
-        setIsModalOpen(true);
+    const showDeleteModal = (subjectId) => {
+        setSelectedSubjectId(subjectId);
+        setIsDeleteModalVisible(true);
     };
 
-    const handleSaveUpdateSubject = async () => {
+    const handleDeleteOk = () => {
+        handleDeleteSubject(selectedSubjectId);
+        setIsDeleteModalVisible(false);
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteModalVisible(false);
+    };
+
+    const showUpdateModal = (subjectId, subjectName) => {
+        setSelectedSubjectId(subjectId);
+        setUpdateSubjectName(subjectName);
+        setIsUpdateModalVisible(true);
+    };
+
+    const handleUpdateOk = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/update/${updateSubjectId}/`, {
+            const response = await fetch(`${API_BASE_URL}/update/${selectedSubjectId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     userId: user.id,
                 },
-                body: JSON.stringify({
-                    name: updateSubjectName,
-                }),
+                body: JSON.stringify({ name: updateSubjectName }),
             });
 
             if (!response.ok) throw new Error('Failed to update subject.');
 
             const updatedSubject = await response.json();
             setSubjects((prevSubjects) =>
-                prevSubjects.map((subjectItem) => (subjectItem._id === updateSubjectId ? updatedSubject : subjectItem))
+                prevSubjects.map((subjectItem) =>
+                    subjectItem._id === selectedSubjectId ? updatedSubject : subjectItem
+                )
             );
-            setIsModalOpen(false);
-            setUpdateSubjectId(null);
-            setUpdateSubjectName('');
+            setIsUpdateModalVisible(false);
+            message.success('Subject updated successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to update subject');
         }
     };
 
-    const handleCancelUpdate = () => {
-        setIsModalOpen(false);
-        setUpdateSubjectId(null);
-        setUpdateSubjectName('');
+    const handleUpdateCancel = () => {
+        setIsUpdateModalVisible(false);
     };
+
+    const columns = [
+        {
+            title: 'S No',
+            key: 'index',
+            render: (text, record, index) => index + 1,
+        },
+        {
+            title: 'Class Name',
+            dataIndex: 'class_id',
+            key: 'class_id',
+            render: (class_id) => getClassNameById(class_id),
+        },
+        {
+            title: 'Section Name',
+            dataIndex: 'section_id',
+            key: 'section_id',
+            render: (section_id) => getSectionNameById(section_id),
+        },
+        {
+            title: 'Subject Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <>
+                    <Button type="primary" onClick={() => showUpdateModal(record._id, record.name)}>
+                        Edit
+                    </Button>
+                    <Button type="danger" onClick={() => showDeleteModal(record._id)} style={{ marginLeft: 8 }}>
+                        Delete
+                    </Button>
+                </>
+            ),
+        },
+    ];
 
     const getClassNameById = (classId) => {
         const classItem = classes.find((classItem) => classItem._id === classId);
@@ -177,99 +234,77 @@ const SubjectManagement = () => {
     return (
         <div className="subject-management-page">
             <SideNav />
-            <div className="main-content">
-                <div className="subject-management-container">
-                    <h2>Subject Management</h2>
-
-                    <div className="create-subject-form">
-                        <select
+            <div className="subject-management-content">
+                <h2>Subject Management</h2>
+                <Form layout="inline" onFinish={handleAddSubject}>
+                    <Form.Item>
+                        <Select
+                            placeholder="Select Class"
                             value={selectedClassId}
-                            onChange={(e) => setSelectedClassId(e.target.value)}
+                            onChange={(value) => setSelectedClassId(value)}
+                            style={{ width: 200 }}
                         >
-                            <option value="">Select Class</option>
                             {classes.map((classItem) => (
-                                <option key={classItem._id} value={classItem._id}>
+                                <Option key={classItem._id} value={classItem._id}>
                                     {classItem.name}
-                                </option>
+                                </Option>
                             ))}
-                        </select>
-                        <select
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Select
+                            placeholder="Select Section"
                             value={selectedSectionId}
-                            onChange={(e) => setSelectedSectionId(e.target.value)}
+                            onChange={(value) => setSelectedSectionId(value)}
+                            style={{ width: 200 }}
                         >
-                            <option value="">Select Section</option>
                             {sections.map((sectionItem) => (
-                                <option key={sectionItem._id} value={sectionItem._id}>
+                                <Option key={sectionItem._id} value={sectionItem._id}>
                                     {sectionItem.name}
-                                </option>
+                                </Option>
                             ))}
-                        </select>
-                        <input
-                            type="text"
-                            placeholder="Subject Name"
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Input
+                            placeholder="New Subject Name"
                             value={newSubjectName}
                             onChange={(e) => setNewSubjectName(e.target.value)}
                         />
-                        <button onClick={handleCreateSubject} disabled={!newSubjectName.trim() || !selectedClassId || !selectedSectionId}>
-                            Create Subject
-                        </button>
-                    </div>
-
-                    {isLoading ? (
-                        <p>Loading subjects...</p>
-                    ) : (
-                        <table className="subject-table">
-                            <thead>
-                                <tr>
-                                    <th>S No</th>
-                                    <th>Class Name</th>
-                                    <th>Section Name</th>
-                                    <th>Subject Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {subjects.length > 0 ? (
-                                    subjects.map((subjectItem, i) => (
-                                        <tr key={subjectItem._id}>
-                                            <td>{i + 1}</td>
-                                            <td>{getClassNameById(subjectItem.class_id)}</td>
-                                            <td>{getSectionNameById(subjectItem.section_id)}</td>
-                                            <td>{subjectItem.name}</td>
-                                            <td>
-                                                <button onClick={() => handleDeleteSubject(subjectItem._id)}>Delete</button>
-                                                <button onClick={() => handleUpdateSubject(subjectItem._id)}>Update</button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="5">No subjects available</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    )}
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Add Subject
+                        </Button>
+                    </Form.Item>
+                </Form>
+                <div className="table-container">
+                    <Table columns={columns} dataSource={subjects} rowKey="_id" loading={isLoading} />
                 </div>
+                <Modal
+                    title="Delete Subject"
+                    visible={isDeleteModalVisible}
+                    onOk={handleDeleteOk}
+                    onCancel={handleDeleteCancel}
+                    okText="Delete"
+                    okButtonProps={{ type: 'danger' }}
+                >
+                    <p>Are you sure you want to delete this subject?</p>
+                </Modal>
+                <Modal
+                    title="Update Subject Name"
+                    visible={isUpdateModalVisible}
+                    onOk={handleUpdateOk}
+                    onCancel={handleUpdateCancel}
+                    okText="Save"
+                >
+                    <Input
+                        placeholder="New Subject Name"
+                        value={updateSubjectName}
+                        onChange={(e) => setUpdateSubjectName(e.target.value)}
+                    />
+                </Modal>
             </div>
-
-            {isModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h3>Update Subject Name</h3>
-                        <input
-                            type="text"
-                            placeholder="New Subject Name"
-                            value={updateSubjectName}
-                            onChange={(e) => setUpdateSubjectName(e.target.value)}
-                        />
-                        <button onClick={handleSaveUpdateSubject} disabled={!updateSubjectName.trim()}>
-                            Save
-                        </button>
-                        <button onClick={handleCancelUpdate}>Cancel</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
