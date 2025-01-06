@@ -126,6 +126,7 @@ export const AdminDashboard = () => {
         formData.append("section_selected",sectionSelected)
         formData.append('exam_id', examid);
         formData.append('upload_type', uploadType);
+        formData.append('organization', user.organization_id);
         
         if (uploadType === 'pdf' && coursePdf) {
             formData.append('course_pdf', coursePdf);

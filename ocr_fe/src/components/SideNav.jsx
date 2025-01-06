@@ -41,7 +41,7 @@ const SideNav = () => {
                         <Link to="/section/management">Section Management</Link>
                     </Menu.Item>
                     <Menu.Item key="6">
-                        <Link to="/subject/management">Subject Management</Link>
+                        <Link to="/subject">Subject Management</Link>
                     </Menu.Item>
                 </>
             )}

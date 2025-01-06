@@ -10,10 +10,9 @@ import { SubUserRegister } from './pages/User_Login/SubUserRegister'
 import ClassManagement from './pages/Class_Management/ClassManagement'
 import SectionManagement from './pages/Section_Management/SectionManagement'
 import UserManagement from './pages/User_Management/UserManagement'
-import SubjectManagement from './pages/Subjectmanagement/Subjectmanagement'
+import SubjectManagement from './pages/Subjectmanagement/SubjectManagement'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -28,9 +27,8 @@ function App() {
               <Route path="/sub-user/register" element={<SubUserRegister/>}/>
               <Route path="/class/management" element={<ClassManagement/>}/>
               <Route path="/section/management" element={<SectionManagement/>}/>
-              
               <Route path="/user/management" element={<UserManagement/>}/>
-              <Route Path="/subject/management" element={<SubjectManagement/>}/>
+              <Route path="/subject" element={<SubjectManagement/>}/>
               {/* <Route path="/" element={<PrivateRoute element={Dashboard} />} /> */}
 
               
