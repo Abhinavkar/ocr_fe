@@ -40,6 +40,9 @@ const SideNav = () => {
                     <Menu.Item key="5">
                         <Link to="/section/management">Section Management</Link>
                     </Menu.Item>
+                    <Menu.Item key="6">
+                        <Link to="/subject/management">Subject Management</Link>
+                    </Menu.Item>
                 </>
             )}
             {!user.is_admin && user.is_sub_admin && (

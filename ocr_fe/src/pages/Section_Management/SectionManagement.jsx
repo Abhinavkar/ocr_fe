@@ -22,7 +22,7 @@ const SectionManagement = () => {
         const fetchSections = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${API_BASE_URL}/677b55352848b6ceab2cf5af/`, {
+                const response = await fetch(`${API_BASE_URL}//`, {
                     method: 'GET',
                 });
 
@@ -40,7 +40,7 @@ const SectionManagement = () => {
 
         const fetchClasses = async () => {
             try {
-                const response = await fetch(`${CLASS_API_BASE_URL}/676d5062b1f7e1e5c223eace/`, {
+                const response = await fetch(`${CLASS_API_BASE_URL}//`, {
                     method: 'GET',
                 });
 
