@@ -6,7 +6,7 @@ import { UserContext } from '../../UserContext';
 import SideNav from '../../components/SideNav';
 
 const { Option } = Select;
-const API_BASE_URL = 'http://localhost:8000/api/services/subjects';
+const API_BASE_URL = 'http://localhost:8000/api/services/org/subjects';
 const CLASS_API_BASE_URL = 'http://localhost:8000/api/services/classes';
 const SECTION_API_BASE_URL = 'http://localhost:8000/api/services/sections';
 
@@ -63,14 +63,14 @@ const SubjectManagement = () => {
 
         const fetchSections = async () => {
             try {
-                const response = await fetch(`${SECTION_API_BASE_URL}/${user.class_id}/`, {
+                const response = await fetch(`${SECTION_API_BASE_URL}/${selectedClassId}/`, {
                     method: 'GET',
                 });
 
                 if (!response.ok) throw new Error('Failed to fetch sections.');
 
                 const data = await response.json();
-                console.log('Sections:', data); // Debugging log
+                console.log('Sections:', data); 
                 setSections(data);
             } catch (error) {
                 console.error(error.message);
@@ -81,6 +81,21 @@ const SubjectManagement = () => {
         fetchClasses();
         fetchSections();
     }, [user.organization_id]);
+    const fetchSections = async (id) => {
+        try {
+            const response = await fetch(`${SECTION_API_BASE_URL}/${id}/`, {
+                method: 'GET',
+            });
+
+            if (!response.ok) throw new Error('Failed to fetch sections.');
+
+            const data = await response.json();
+            console.log('Sections:', data); 
+            setSections(data);
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
     const handleAddSubject = async () => {
         try {
@@ -93,7 +108,7 @@ const SubjectManagement = () => {
                 body: JSON.stringify({
                     name: newSubjectName,
                     class_id: selectedClassId,
-                    section_id: selectedSectionId,
+                    associated_section_id: selectedSectionId,
                     organization_id: user.organization_id,
                 }),
             });
@@ -241,7 +256,10 @@ const SubjectManagement = () => {
                         <Select
                             placeholder="Select Class"
                             value={selectedClassId}
-                            onChange={(value) => setSelectedClassId(value)}
+                            onChange={(value) => {
+                                setSelectedClassId(value)
+                                fetchSections(value)
+                            }}
                             style={{ width: 200 }}
                         >
                             {classes.map((classItem) => (
