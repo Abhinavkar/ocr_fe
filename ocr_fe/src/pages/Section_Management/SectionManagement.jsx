@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Form, Input, Button, Table, Modal, message, Select } from 'antd';
 import './SectionManagement.css';
 import { UserContext } from '../../UserContext';
 import SideNav from '../../components/SideNav';
 
-const API_BASE_URL = 'http://localhost:8000/api/services/sections';
+const { Option } = Select;
+const API_BASE_URL = 'http://localhost:8000/api/services/org/sections';
+const API_BASE_URL_SEC= 'http://localhost:8000/api/services/sections'
 const CLASS_API_BASE_URL = 'http://localhost:8000/api/services/classes';
 
 const SectionManagement = () => {
@@ -12,9 +15,11 @@ const SectionManagement = () => {
     const [sections, setSections] = useState([]);
     const [classes, setClasses] = useState([]);
     const [newSectionName, setNewSectionName] = useState('');
-    const [updateSectionId, setUpdateSectionId] = useState(null);
+    const [selectedClassId, setSelectedClassId] = useState('');
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+    const [selectedSectionId, setSelectedSectionId] = useState(null);
     const [updateSectionName, setUpdateSectionName] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useContext(UserContext);
 
@@ -22,7 +27,7 @@ const SectionManagement = () => {
         const fetchSections = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${API_BASE_URL}//`, {
+                const response = await fetch(`${API_BASE_URL}/${user.organization_id}/`, {
                     method: 'GET',
                 });
 
@@ -40,7 +45,7 @@ const SectionManagement = () => {
 
         const fetchClasses = async () => {
             try {
-                const response = await fetch(`${CLASS_API_BASE_URL}//`, {
+                const response = await fetch(`${CLASS_API_BASE_URL}/${user.organization_id}/`, {
                     method: 'GET',
                 });
 
@@ -56,11 +61,11 @@ const SectionManagement = () => {
 
         fetchSections();
         fetchClasses();
-    }, []);
+    }, [user.organization_id]);
 
-    const handleCreateSection = async () => {
+    const handleAddSection = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/`, {
+            const response = await fetch(`${API_BASE_URL_SEC}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,6 +73,7 @@ const SectionManagement = () => {
                 },
                 body: JSON.stringify({
                     name: newSectionName,
+                    class_id: selectedClassId,
                     organization_id: user.organization_id,
                 }),
             });
@@ -77,14 +83,17 @@ const SectionManagement = () => {
             const newSection = await response.json();
             setSections((prevSections) => [...prevSections, newSection]);
             setNewSectionName('');
+            setSelectedClassId('');
+            message.success('Section added successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to add section');
         }
     };
 
     const handleDeleteSection = async (sectionId) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete/${sectionId}/`, {
+            const response = await fetch(`${API_BASE_URL_SEC}/delete/${sectionId}/`, {
                 method: 'DELETE',
                 headers: {
                     userId: user.id,
@@ -94,50 +103,96 @@ const SectionManagement = () => {
             if (!response.ok) throw new Error('Failed to delete section.');
 
             setSections((prevSections) => prevSections.filter((sectionItem) => sectionItem._id !== sectionId));
+            message.success('Section deleted successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to delete section');
         }
     };
 
-    const handleUpdateSection = (sectionId) => {
-        const sectionToUpdate = sections.find((sectionItem) => sectionItem._id === sectionId);
-        setUpdateSectionId(sectionId);
-        setUpdateSectionName(sectionToUpdate?.name || '');
-        setIsModalOpen(true);
+    const showDeleteModal = (sectionId) => {
+        setSelectedSectionId(sectionId);
+        setIsDeleteModalVisible(true);
     };
 
-    const handleSaveUpdateSection = async () => {
+    const handleDeleteOk = () => {
+        handleDeleteSection(selectedSectionId);
+        setIsDeleteModalVisible(false);
+    };
+
+    const handleDeleteCancel = () => {
+        setIsDeleteModalVisible(false);
+    };
+
+    const showUpdateModal = (sectionId, sectionName) => {
+        setSelectedSectionId(sectionId);
+        setUpdateSectionName(sectionName);
+        setIsUpdateModalVisible(true);
+    };
+
+    const handleUpdateOk = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/update/${updateSectionId}/`, {
+            const response = await fetch(`${API_BASE_URL_SEC}/update/${selectedSectionId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     userId: user.id,
                 },
-                body: JSON.stringify({
-                    name: updateSectionName,
-                }),
+                body: JSON.stringify({ name: updateSectionName }),
             });
 
             if (!response.ok) throw new Error('Failed to update section.');
 
             const updatedSection = await response.json();
             setSections((prevSections) =>
-                prevSections.map((sectionItem) => (sectionItem._id === updateSectionId ? updatedSection : sectionItem))
+                prevSections.map((sectionItem) =>
+                    sectionItem._id === selectedSectionId ? updatedSection : sectionItem
+                )
             );
-            setIsModalOpen(false);
-            setUpdateSectionId(null);
-            setUpdateSectionName('');
+            setIsUpdateModalVisible(false);
+            message.success('Section updated successfully');
         } catch (error) {
             console.error(error.message);
+            message.error('Failed to update section');
         }
     };
 
-    const handleCancelUpdate = () => {
-        setIsModalOpen(false);
-        setUpdateSectionId(null);
-        setUpdateSectionName('');
+    const handleUpdateCancel = () => {
+        setIsUpdateModalVisible(false);
     };
+
+    const columns = [
+        {
+            title: 'S No',
+            key: 'index',
+            render: (text, record, index) => index + 1,
+        },
+        {
+            title: 'Class Name',
+            dataIndex: 'class_id',
+            key: 'class_id',
+            render: (class_id) => getClassNameById(class_id),
+        },
+        {
+            title: 'Section Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+                <>
+                    <Button type="primary" onClick={() => showUpdateModal(record._id, record.name)}>
+                        Edit
+                    </Button>
+                    <Button type="danger" onClick={() => showDeleteModal(record._id)} style={{ marginLeft: 8 }}>
+                        Delete
+                    </Button>
+                </>
+            ),
+        },
+    ];
 
     const getClassNameById = (classId) => {
         const classItem = classes.find((classItem) => classItem._id === classId);
@@ -147,75 +202,63 @@ const SectionManagement = () => {
     return (
         <div className="section-management-page">
             <SideNav />
-            <div className="main-content">
-                <div className="section-management-container">
-                    <h2>Section Management</h2>
-
-                    <div className="create-section-form">
-                        <input
-                            type="text"
-                            placeholder="Section Name"
+            <div className="section-management-content">
+                <h2>Section Management</h2>
+                <Form layout="inline" onFinish={handleAddSection}>
+                    <Form.Item>
+                        <Select
+                            placeholder="Select Class"
+                            value={selectedClassId}
+                            onChange={(value) => setSelectedClassId(value)}
+                            style={{ width: 200 }}
+                        >
+                            {classes.map((classItem) => (
+                                <Option key={classItem._id} value={classItem._id}>
+                                    {classItem.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item>
+                        <Input
+                            placeholder="New Section Name"
                             value={newSectionName}
                             onChange={(e) => setNewSectionName(e.target.value)}
                         />
-                        <button onClick={handleCreateSection} disabled={!newSectionName.trim()}>
-                            Create Section
-                        </button>
-                    </div>
-
-                    {isLoading ? (
-                        <p>Loading sections...</p>
-                    ) : (
-                        <table className="section-table">
-                            <thead>
-                                <tr>
-                                    <th>S No</th>
-                                    <th>Class Name</th>
-                                    <th>Section Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sections.length > 0 ? (
-                                    sections.map((sectionItem, i) => (
-                                        <tr key={sectionItem._id}>
-                                            <td>{i + 1}</td>
-                                            <td>{getClassNameById(sectionItem.class_id)}</td>
-                                            <td>{sectionItem.name}</td>
-                                            <td>
-                                                <button onClick={() => handleDeleteSection(sectionItem._id)}>Delete</button>
-                                                <button onClick={() => handleUpdateSection(sectionItem._id)}>Update</button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="4">No sections available</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    )}
+                    </Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Add Section
+                        </Button>
+                    </Form.Item>
+                </Form>
+                <div className="table-container">
+                    <Table columns={columns} dataSource={sections} rowKey="_id" loading={isLoading} />
                 </div>
+                <Modal
+                    title="Delete Section"
+                    visible={isDeleteModalVisible}
+                    onOk={handleDeleteOk}
+                    onCancel={handleDeleteCancel}
+                    okText="Delete"
+                    okButtonProps={{ type: 'danger' }}
+                >
+                    <p>Are you sure you want to delete this section?</p>
+                </Modal>
+                <Modal
+                    title="Update Section Name"
+                    visible={isUpdateModalVisible}
+                    onOk={handleUpdateOk}
+                    onCancel={handleUpdateCancel}
+                    okText="Save"
+                >
+                    <Input
+                        placeholder="New Section Name"
+                        value={updateSectionName}
+                        onChange={(e) => setUpdateSectionName(e.target.value)}
+                    />
+                </Modal>
             </div>
-
-            {isModalOpen && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h3>Update Section Name</h3>
-                        <input
-                            type="text"
-                            placeholder="New Section Name"
-                            value={updateSectionName}
-                            onChange={(e) => setUpdateSectionName(e.target.value)}
-                        />
-                        <button onClick={handleSaveUpdateSection} disabled={!updateSectionName.trim()}>
-                            Save
-                        </button>
-                        <button onClick={handleCancelUpdate}>Cancel</button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

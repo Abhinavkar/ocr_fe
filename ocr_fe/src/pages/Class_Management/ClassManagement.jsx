@@ -137,6 +137,11 @@ const ClassManagement = () => {
 
     const columns = [
         {
+            title: 'S No',
+            key: 'index',
+            render: (text, record, index) => index + 1,
+        },
+        {
             title: 'Class Name',
             dataIndex: 'name',
             key: 'name',
