@@ -166,9 +166,9 @@ const SubjectManagement = () => {
         setIsUpdateModalVisible(true);
     };
 
-    const handleUpdateOk = async () => {
+    const handleUpdateOk = async (selectedSubjectId) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/services/sections/update/${subjectId}/`, {
+            const response = await fetch(`http://localhost:8000/api/services/update/subjects/${selectedSubjectId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
