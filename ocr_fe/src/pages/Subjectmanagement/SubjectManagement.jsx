@@ -168,7 +168,8 @@ const SubjectManagement = () => {
         setIsUpdateModalVisible(true);
     };
 
-    const handleUpdateOk = async (selectedSubjectId) => {
+    const handleUpdateOk = async () => {
+        console.log(selectedSubjectId, updateSubjectName);
         try {
             const response = await fetch(`http://localhost:8000/api/services/update/subjects/${selectedSubjectId}/`, {
                 method: 'PUT',
@@ -322,7 +323,10 @@ const SubjectManagement = () => {
                     <Input
                         placeholder="New Subject Name"
                         value={updateSubjectName}
-                        onChange={(e) => setUpdateSubjectName(e.target.value)}
+                        onChange={(e) => {
+                            setUpdateSubjectName(e.target.value)
+                            console.log(e.target.value)
+                        }}
                     />
                 </Modal>
             </div>
