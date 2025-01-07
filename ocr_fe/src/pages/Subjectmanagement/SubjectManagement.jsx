@@ -217,13 +217,14 @@ const SubjectManagement = () => {
         },
         {
             title: 'Section Name',
-            dataIndex: 'section_name',
-            key: 'section_name',
+            dataIndex: 'associated_section_id',
+            key: 'associated_section_id',
+            render:(associated_section_id) => getSectionNameById(associated_section_id)
         },
         {
             title: 'Subject Name',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'subject_name',
+            key: 'subject_name',
         },
         {
             title: 'Action',
@@ -247,8 +248,10 @@ const SubjectManagement = () => {
     };
 
     const getSectionNameById = (sectionId) => {
+       
         const sectionItem = sections.find((sectionItem) => sectionItem._id === sectionId);
-        return sectionItem ? sectionItem.name : 'Unknown';
+        
+        return sectionItem ? sectionItem.section_name : 'Unknown';
     };
 
     return (
