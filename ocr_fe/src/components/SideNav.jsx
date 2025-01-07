@@ -9,7 +9,6 @@ import DownloadPng from "../assets/images/download.png";
 import LogoutPng from "../assets/images/logout.png";
 import CareersPng from "../assets/images/careers.png";
 import './SideNav.css';
-import MenuItem from 'antd/es/menu/MenuItem';
 
 const SideNav = () => {
     const { user } = useContext(UserContext);
@@ -21,35 +20,31 @@ const SideNav = () => {
         navigate('/');
     };
 
-    const managementMenu = (
+    const userManagementMenu = (
         <Menu>
-            {user.is_admin && (
-                <>
-                    <Menu.Item key="1">
-                        <Link to="/user/register/">Add User</Link>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                        <Link to="/sub-user/register">Add Subadmin</Link>
-                    </Menu.Item>
-                    <Menu.Item key="3">
-                        <Link to="/user/management">User Management</Link>
-                    </Menu.Item>
-                    <Menu.Item key="4">
-                        <Link to="/class/management">Class Management</Link>
-                    </Menu.Item>
-                    <Menu.Item key="5">
-                        <Link to="/section/management">Section Management</Link>
-                    </Menu.Item>
-                    <Menu.Item key="6">
-                        <Link to="/subject">Subject Management</Link>
-                    </Menu.Item>
-                </>
-            )}
-            {!user.is_admin && user.is_sub_admin && (
-                <Menu.Item key="5">
-                    <Link to="/user/register/">Add User</Link>
-                </Menu.Item>
-            )}
+            <Menu.Item key="1">
+                <Link to="/user/register/">Add User</Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+                <Link to="/sub-user/register">Add Subadmin</Link>
+            </Menu.Item>
+            <Menu.Item key="3">
+                <Link to="/user/management">User Management</Link>
+            </Menu.Item>
+        </Menu>
+    );
+
+    const departmentManagementMenu = (
+        <Menu>
+            <Menu.Item key="4">
+                <Link to="/class/management">Class Management</Link>
+            </Menu.Item>
+            <Menu.Item key="5">
+                <Link to="/section/management">Section Management</Link>
+            </Menu.Item>
+            <Menu.Item key="6">
+                <Link to="/subject">Subject Management</Link>
+            </Menu.Item>
         </Menu>
     );
 
@@ -59,30 +54,35 @@ const SideNav = () => {
                 <img src={LogoSvg} alt="Logo" />
             </div>
             <ul>
-                <li><span>Hi {user.first_name}</span></li>
+                <li><span style={{color:"white",fontSize:"20px"}}>Hi {user.first_name}</span></li>
                 <li className="active">
                     <Link to="/dashboard">
                         <span><img src={DashboardPng} alt="Dashboard" /></span>Dashboard
                     </Link>
                 </li>
-          
-                {(user.is_admin || user.is_sub_admin) && (
-                    <li>
-                        <Dropdown overlay={managementMenu} trigger={['click']}>
-                            <span className="dropdown-toggle">
-                            <p className='dropdown_text'>  <img src={CareersPng} alt="Management" />Management Services <DownOutlined /></p> 
-                            </span>
-                        </Dropdown>
-                    </li>
-                )}
                 <li>
-                
-                </li>
-                      <li>
                     <Link to="/result">
                         <span><img src={DownloadPng} alt="Download" /></span>Result Download
                     </Link>
                 </li>
+                {(user.is_admin || user.is_sub_admin) && (
+                    <>
+                        <li>
+                            <Dropdown overlay={userManagementMenu} trigger={['click']}>
+                                <span className="dropdown-toggle"style={{color:"white"}}>
+                                    <img src={CareersPng} alt="User Management" /> User Management  <DownOutlined />
+                                </span>
+                            </Dropdown>
+                        </li>
+                        <li>
+                            <Dropdown overlay={departmentManagementMenu} trigger={['click']}>
+                                <span className="dropdown-toggle" style={{color:"white"}}>
+                                    <img src={CareersPng}  alt="Department Management" /> Department Management  <DownOutlined />
+                                </span>
+                            </Dropdown>
+                        </li>
+                    </>
+                )}
                 <li>
                     <Link to="/" onClick={handleLogout}>
                         <span><img src={LogoutPng} alt="Logout" /></span>Logout

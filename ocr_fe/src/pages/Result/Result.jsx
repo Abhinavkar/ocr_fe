@@ -67,15 +67,6 @@ export const Result = () => {
         navigate('/');
     };
 
-    const getClassById = (id) => {
-        const classItem = classes.find((classItem) => classItem._id === id);
-        return classItem ? classItem.name : 'Unknown Class';
-    };
-
-    const getSectionById = (id) => {
-        const secItem = sections.find((secItem) => secItem._id === id);
-        return secItem ? secItem.name : 'Unknown Section';
-    };
 
     const handleDownload = async (result) => {
         const doc = new jsPDF();
@@ -114,9 +105,9 @@ export const Result = () => {
         doc.setTextColor(0, 0, 128); // Dark blue color
         doc.text(`${result._id}`, 60, 45);
         doc.text(`${result.exam_id}`, 60, 55);
-        doc.text(getClassById(result.class_id), 60, 65);
+        doc.text(`${result.class_name}`, 60, 65);
         doc.text(`${result.section_name}`, 60, 75);
-        doc.text(`${result.subject}`, 60, 85);
+        doc.text(`${result.subjects}`, 60, 85);
         doc.text(`${result.roll_no}`, 60, 95);
         doc.text(`${result.similarity_score}`, 60, 105);
         doc.text('Abhinav Kar', 60, 115); // Replace with actual uploader if available
@@ -143,9 +134,8 @@ export const Result = () => {
         },
         {
             title: 'Class',
-            dataIndex: 'class_id',
-            key: 'class_id',
-            render: (text) => getClassById(text),
+            dataIndex: 'class_name',
+            key: 'class_name',
         },
         {
             title: 'Section',
@@ -155,8 +145,8 @@ export const Result = () => {
         },
         {
             title: 'Subject',
-            dataIndex: 'subject',
-            key: 'subject',
+            dataIndex: 'subjects',
+            key: 'subjects',
         },
         {
             title: 'Roll No',
