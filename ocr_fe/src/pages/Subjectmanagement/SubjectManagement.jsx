@@ -121,6 +121,7 @@ const SubjectManagement = () => {
             setSelectedClassId('');
             setSelectedSectionId('');
             message.success('Subject added successfully');
+            navigate('/dashboard')
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add subject');

@@ -29,7 +29,7 @@ const SideNav = () => {
                 <Link to="/sub-user/register">Add Subadmin</Link>
             </Menu.Item>
             <Menu.Item key="3">
-                <Link to="/user/management">User Management</Link>
+                <Link to="/user/management">User Database</Link>
             </Menu.Item>
         </Menu>
     );

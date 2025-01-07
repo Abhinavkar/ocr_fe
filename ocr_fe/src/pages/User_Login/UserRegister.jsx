@@ -82,6 +82,8 @@ export const UserRegister = () => {
 
         if (response.ok) {
             toast.success('Registration successful');
+            navigate('/dashboard')
+            toast.success('Registration successful');
         } else {
             toast.error('Registration failed');
         }
