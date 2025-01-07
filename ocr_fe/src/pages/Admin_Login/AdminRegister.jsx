@@ -145,18 +145,6 @@ export const AdminRegister = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sectionAssigned">Section Assigned</label>
-                            <input
-                                type="text"
-                                id="sectionAssigned"
-                                name="sectionAssigned"
-                                value={sectionAssigned}
-                                onChange={(e) => setSectionAssigned(e.target.value)}
-                                required
-                                className="form-control"
-                            />
-                        </div>
-                        <div className="form-group">
                             <label htmlFor="department">Department</label>
                             <input
                                 type="text"
@@ -168,6 +156,19 @@ export const AdminRegister = () => {
                                 className="form-control"
                             />
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="sectionAssigned">Sub Department</label>
+                            <input
+                                type="text"
+                                id="sectionAssigned"
+                                name="sectionAssigned"
+                                value={sectionAssigned}
+                                onChange={(e) => setSectionAssigned(e.target.value)}
+                                required
+                                className="form-control"
+                            />
+                        </div>
+                      
                     </div>
                 </div>
                 <button type="submit" className="btn-fill">Register</button>
