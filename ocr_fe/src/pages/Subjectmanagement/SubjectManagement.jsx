@@ -140,6 +140,8 @@ const SubjectManagement = () => {
 
             setSubjects((prevSubjects) => prevSubjects.filter((subjectItem) => subjectItem._id !== subjectId));
             message.success('Subject deleted successfully');
+            navigate("/dashboard")
+
         } catch (error) {
             console.error(error.message);
             message.error('Failed to delete subject');
@@ -187,6 +189,8 @@ const SubjectManagement = () => {
             );
             setIsUpdateModalVisible(false);
             message.success('Subject updated successfully');
+            navigate("/dashboard")
+
         } catch (error) {
             console.error(error.message);
             message.error('Failed to update subject');

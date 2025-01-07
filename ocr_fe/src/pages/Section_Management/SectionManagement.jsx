@@ -85,6 +85,8 @@ const SectionManagement = () => {
             setNewSectionName('');
             setSelectedClassId('');
             message.success('Section added successfully');
+            navigate("/dashboard")
+
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add section');
@@ -104,6 +106,8 @@ const SectionManagement = () => {
 
             setSections((prevSections) => prevSections.filter((sectionItem) => sectionItem._id !== sectionId));
             message.success('Section deleted successfully');
+            navigate("/dashboard")
+
         } catch (error) {
             console.error(error.message);
             message.error('Failed to delete section');
@@ -151,6 +155,8 @@ const SectionManagement = () => {
             );
             setIsUpdateModalVisible(false);
             message.success('Section updated successfully');
+            navigate("/dashboard")
+
         } catch (error) {
             console.error(error.message);
             message.error('Failed to update section');
