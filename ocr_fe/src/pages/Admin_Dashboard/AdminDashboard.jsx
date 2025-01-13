@@ -26,11 +26,10 @@ export const AdminDashboard = () => {
     const [classes, setClasses] = useState([]);
     const [sections, setSections] = useState([]);
     const [subjects, setSubjects] = useState([]);
-    const [examid, setExamid] = useState('');
+    const [examIds, setExamIds] = useState([]);
     const [isUploading, setIsUploading] = useState(false); 
-    console.log("User:", user);
+    const [examData , SetExamData] = useState([])
     
-
     useEffect(() => {
         const fetchUploadedFiles = async () => {
          
@@ -87,7 +86,29 @@ export const AdminDashboard = () => {
         }
     };
 
+    const fetchExamId = async (classId, sectionId, subjectId) => {
+        try {
+            const response = await fetch('http://localhost:8000/api/services/get/exam-id/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'classId': classId,
+                    'sectionId': sectionId,
+                    'subjectId': subjectId,
+                    'organizationId': user.organization_id,
+                },
+            });
 
+            if (response.ok) {
+                const data = await response.json();
+                SetExamData(data.exam_ids)
+            } else {
+                console.error('Failed to fetch exam ID');
+            }
+        } catch (error) {
+            console.error('Error fetching exam ID:', error);
+        }
+    };
 
     const handleClassChange = (e) => {
         const classId = e.target.value;
@@ -99,6 +120,14 @@ export const AdminDashboard = () => {
         const sectionId = e.target.value;
         setSectionSelected(sectionId);
         fetchSubjectApi(sectionId);
+    };
+
+    const handleSubjectChange = (e) => {
+        const subjectId = e.target.value;
+        setSubjectSelected(subjectId);
+        if (classSelected && sectionSelected && subjectId) {
+            fetchExamId(classSelected, sectionSelected, subjectId);
+        }
     };
 
     const handleLogout = () => {
@@ -124,7 +153,7 @@ export const AdminDashboard = () => {
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
         formData.append("section_selected",sectionSelected)
-        formData.append('exam_id', examid);
+        formData.append('exam_id', examIds[0]); // Assuming the first exam ID is selected by default
         formData.append('upload_type', uploadType);
         formData.append('organization',user.organization_id);
         
@@ -132,9 +161,11 @@ export const AdminDashboard = () => {
             formData.append('course_pdf', coursePdf);
             try {
 
-                const response = await fetch('http://localhost:8000/api/qa/admin/upload/pdf/', {
+                const response = await fetch('http://localhost:8000/api/qa/upload/course/pdf/', {
                     method: 'POST',
-                   
+                    headers: {
+                        userId: user.id,
+                    },
                     body: formData,
                 });
     
@@ -157,9 +188,11 @@ export const AdminDashboard = () => {
             formData.append('question_image', questionImage);
             try {
 
-                const response = await fetch('http://localhost:8000/api/qa/admin/upload/question-pdf/', {
+                const response = await fetch('http://localhost:8000/api/qa/upload/question/pdf/', {
                     method: 'POST',
-                   
+                    headers: {
+                        userId: user.id,
+                    },
                     body: formData,
                 });
     
@@ -261,7 +294,7 @@ export const AdminDashboard = () => {
                                                 <select 
                                                     className="form-control" 
                                                     value={subjectSelected} 
-                                                    onChange={(e) => setSubjectSelected(e.target.value)} 
+                                                    onChange={handleSubjectChange} 
                                                     disabled={!classSelected} 
                                                 >
                                                     <option value="">Select</option>
@@ -273,12 +306,24 @@ export const AdminDashboard = () => {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="form-group d-flex">
-                                            <label className="col-sm-3 col-form-label label">Exam Id </label>
-                                            <div className="col-sm-9">
-                                                <input type="text" className="form-control" placeholder="Enter Exam Id" onChange={(e) => setExamid(e.target.value)} />
+                                        {uploadType === 'image' && (
+                                            <div className="form-group d-flex mb-3">
+                                                <label className="col-sm-3 col-form-label label">Exam Id</label>
+                                                <div className="col-sm-9">
+                                                    <select className="form-control" value={examIds} onChange={(e) => setExamIds(e.target.value)}>
+                                                        {console.log(examData)}
+                                                        {examData.map((exam_id,id)=>{
+                                                            return(
+                                                                <option value={exam_id} key={id}>
+                                                                {exam_id}
+                                                            </option> 
+                                                            )
+                                                        })}
+                                                        
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                     <div className="row-md-6 d-flex ps-5 align-items-center upfile">
                                         <form className="formUpload" onSubmit={handleFileUpload}>

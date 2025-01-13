@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import './AdminLogin.css';
+import React, { useState, useEffect, useContext } from 'react';
+import './UserLogin.css';
 import AdminLogo from "../../assets/images/blacklogo.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from '../../UserContext';
+import LogoSvg from "../../assets/images/logo.svg";
+import DashboardPng from "../../assets/images/dashboard.png";
+import DownloadPng from "../../assets/images/download.png";
+import CareersPng from "../../assets/images/careers.png"
+import LogoutPng from "../../assets/images/logout.png";
+import SideNav from '../../components/SideNav';
 
-export const AdminRegister = () => {
+
+export const UserRegister = () => {
     const navigate = useNavigate();
+    const { user } = useContext(UserContext); // Access user data from context
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -16,25 +25,45 @@ export const AdminRegister = () => {
     const [department, setDepartment] = useState('');
     const [organization, setOrganization] = useState('');
     const [organizations, setOrganizations] = useState([]);
+    const [departments, setDepartments] = useState([]);
+    const [sections, setSections] = useState([]);
 
     useEffect(() => {
-        const fetchOrganizations = async () => {
-            const response = await fetch('http://localhost:8000/api/services/get/organization/', {
+        const fetchDepartments = async () => {
+            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
             const data = await response.json();
-            setOrganizations(data);
+            setDepartments(data);
         };
-        fetchOrganizations();
-    }, []);
+
+        fetchDepartments();
+    }, [user.organization_id]);
+
+    useEffect(() => {
+        const fetchSections = async () => {
+            if (department) {
+                const response = await fetch(`http://localhost:8000/api/services/sections/${department}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                setSections(data);
+            }
+        };
+
+        fetchSections();
+    }, [department]);
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('http://localhost:8000/api/auth/org/register/admin/', {
+        const response = await fetch('http://localhost:8000/api/auth/org/register/user/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,40 +76,33 @@ export const AdminRegister = () => {
                 email,
                 section_assigned: sectionAssigned,
                 department,
-                organization
+                organization:user.organization_id
             }),
         });
 
         if (response.ok) {
             toast.success('Registration successful');
-            navigate('/');
         } else {
             toast.error('Registration failed');
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('is_admin');
+        navigate('/');
+    };
+
     return (
-        <div className="login-container">
-            <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />
-            <h2>Organization Admin Registration</h2>
-            <form onSubmit={handleRegister}>
-                <div class name="form-group-box" >
-                    <div className="form-group-box-col">
+        <div className="user-register-page">
+            <SideNav/>
+            <div className="main-content">
+                <div className="login-container">
+                    <img src={AdminLogo} className="LoginLogoImage" alt="Admin Logo" />
+                    <h2>User Registration</h2>
+                    <form onSubmit={handleRegister}>
                         <div className="form-group">
-                            <label htmlFor="organization">Organization</label>
-                            <select
-                                id="organization"
-                                name="organization"
-                                value={organization}
-                                onChange={(e) => setOrganization(e.target.value)}
-                                required
-                                className="form-control"
-                            >
-                                <option value="">Select Organization</option>
-                                {organizations.map(org => (
-                                    <option key={org._id} value={org._id}>{org.organization_name}</option>
-                                ))}
-                            </select>
+                            <label htmlFor="organization">Organization : {user.organization}</label>
                         </div>
                         <div className="form-group">
                             <label htmlFor="username">Username</label>
@@ -118,8 +140,6 @@ export const AdminRegister = () => {
                                 className="form-control"
                             />
                         </div>
-                    </div>
-                    <div className="form-group-box-col">
                         <div className="form-group">
                             <label htmlFor="lastName">Last Name</label>
                             <input
@@ -146,35 +166,41 @@ export const AdminRegister = () => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="department">Department</label>
-                            <input
-                                type="text"
+                            <select
                                 id="department"
                                 name="department"
                                 value={department}
                                 onChange={(e) => setDepartment(e.target.value)}
                                 required
                                 className="form-control"
-                            />
+                            >
+                                <option value="">Select Department</option>
+                                {departments.map(dept => (
+                                    <option key={dept._id} value={dept._id}>{dept.name}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="sectionAssigned">Sub Department</label>
-                            <input
-                                type="text"
+                            <label htmlFor="sectionAssigned">Section Assigned</label>
+                            <select
                                 id="sectionAssigned"
                                 name="sectionAssigned"
                                 value={sectionAssigned}
                                 onChange={(e) => setSectionAssigned(e.target.value)}
                                 required
                                 className="form-control"
-                            />
+                            >
+                                <option value="">Select Section</option>
+                                {sections.map(section => (
+                                    <option key={section._id} value={section._id}>{section.name}</option>
+                                ))}
+                            </select>
                         </div>
-                      
-                    </div>
+                        <button type="submit" className="btn-fill">Register</button>
+                    </form>
+                    <ToastContainer />
                 </div>
-                <button type="submit" className="btn-fill">Register</button>
-            </form>
-            <ToastContainer />
+            </div>
         </div>
     );
 };
-export default AdminRegister;

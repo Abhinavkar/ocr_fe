@@ -181,8 +181,8 @@ const SectionManagement = () => {
         },
         {
             title: 'Section Name',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'section_name',
+            key: 'section_name',
         },
         {
             title: 'Action',
