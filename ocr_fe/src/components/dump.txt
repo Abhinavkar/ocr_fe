@@ -1,0 +1,84 @@
+import React from 'react';
+import { Pie , Doughnut ,Bar, Scatter } from 'react-chartjs-2';
+import 'chart.js/auto';
+import "./Dashboard.css";
+import SideNav from '../../components/SideNav';
+
+const DashBoard = () => {
+ 
+  return (
+    <div className='dashboard'>
+      OVERVIEW
+      <div className='dashboard-sidebar'>
+      <SideNav />
+      </div>
+      <div className='dashboard-content'>
+        <main>
+          <div className='dashboard-body'>
+            <div className="dashboard-layout">
+              <div className="dashboard-grid-layout">
+                <div className="layout-grid-col1">
+                  <div className="dashboard-card">
+                    <div className="card-title">
+                      <h3 className='card-title-content'> Org Users </h3>
+                      <span className="card-count"> 
+                        10 
+                      </span>
+                    </div>
+                    <div className="card-body">
+                      <div className='chart'>
+                      <Doughnut data={data} />
+                      </div>
+                  
+                    </div>
+                  </div>
+                  <div className="dashboard-card">
+                    <div className="card-title">
+                      <h3 className='card-title-content'> Department </h3>
+                      <span className="card-count"> 
+                        4
+                      </span>
+                    </div>
+                    <div className="card-body-bar">
+                      <Bar data={Departmentdata} />
+                    </div>
+                  </div>
+                  <div className="dashboard-card">
+                    <div className="card-title">
+                      <h3 className='card-title-content'> Exam Details </h3>
+                      <span className="card-count"> 
+                        10 
+                      </span>
+                    </div>
+                    <div className="card-body">
+                      <Pie data={Examdata} />
+                    </div>
+                  </div>
+
+                </div>
+                <div className="layout-grid-col2">
+                <div className="dashboard-card">
+                    <div className="card-title">
+                      <h3 className='card-title-content'> Results Published  </h3>
+                      <span className="card-count"> 
+                        10 
+                      </span>
+                    </div>
+                    <div className="card-body">
+                      < Pie data={Resultdata} />
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* Add more columns or content here */}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default DashBoard;

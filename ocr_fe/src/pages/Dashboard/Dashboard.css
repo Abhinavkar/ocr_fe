@@ -1,0 +1,128 @@
+/* *{
+    border: 1px solid red;
+} */
+.dashboard{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+.dashboard-sidebar{
+    z-index: 100;
+    display: flex;
+    width: 15%;
+    
+}
+.dashboard-content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 85%;
+}
+.dashboard-body{
+   
+    margin-top: 45px;
+    min-height: calc(100vh - 45px);
+    /* min-width: 70vw; */
+    padding: 10px;
+    
+    height: 100%;
+ 
+}
+main{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.dashboard-layout{
+    display: block;
+    box-sizing: border-box;
+}
+.dashboard-grid-layout{
+    display: grid;
+
+
+}
+.layout-grid-row1{      
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        grid-gap: 20px;
+    
+        
+}
+.layout-grid-col1{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 10px;
+
+}
+.layout-grid-col3{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 10px;
+    margin-top:20px
+
+
+}
+.dashboard-card{
+    display: flex;
+    border:1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 3px 0 #9595951a;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+.card-title{
+    background-color: #80C4E9;
+    align-items: center;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 1px 0 #b2b2b21a;
+    display: flex;
+    height: 56px;
+    justify-content: center;
+    padding: 0 20px 0 25px;
+
+}
+.card-title h3 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    margin: 0;
+    position: relative;
+}
+.card-body{
+    padding: 20px;
+}
+.body-topic-row{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+
+}
+.body-topic-row-content{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.card-footer{
+    display: flex;
+    justify-content: center;
+    color: white;
+    background: #80C4E9;
+    padding: 8px;
+    border:1px solid #e0e0e0;
+    border-radius: 20%;
+}
+.card-footer-link{
+    color: black;
+}
+.card-title-content{
+    align-content: center;
+
+}

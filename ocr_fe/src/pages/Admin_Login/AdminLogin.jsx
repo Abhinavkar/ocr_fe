@@ -29,10 +29,10 @@ export const AdminLogin = () => {
                         throw new Error(`Error:${response.statusText}`);
                     }
                     const data = await response.json();
-                    localStorage.setItem('token', data.access);
+                  
                     localStorage.setItem('is_admin', data.is_admin);
                     setUser(data); // Set user details in context
-                
+                    localStorage.setItem('token', data.is_admin);
                     navigate('/dashboard');
                 } catch (error) {
                     toast.error(error.message);
@@ -43,6 +43,7 @@ export const AdminLogin = () => {
     };
 
     return (
+        <div className="layout">
         <div className="login-container">
             <img src={AdminLogo} className="LoginLogoImage" alt="" />
             <h2>Admin Login</h2>
@@ -74,5 +75,7 @@ export const AdminLogin = () => {
             <ToastContainer />
             <div className='notyet'>  <Link to="/admin/register">Don't have a ID Yet? Click to Register</Link></div>
         </div>
+        </div>
     );
 };
+export default AdminLogin;

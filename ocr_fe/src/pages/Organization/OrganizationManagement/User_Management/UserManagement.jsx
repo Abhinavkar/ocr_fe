@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../../../UserContext';
 import { Table, Button, Modal, Form, Input, message } from 'antd';
-import SideNav from '../../components/SideNav';
+
 import './UserManagement.css';
 
 const API_BASE_URL = 'http://localhost:8000/api/operation';
@@ -169,7 +169,6 @@ const UserManagement = () => {
 
     return (
         <div className="user-management-page">
-            <SideNav />
             <div className="user-management-content">
                <div className='UserManagementHeader'>
                <h2>{user.organization } User DataBase</h2>

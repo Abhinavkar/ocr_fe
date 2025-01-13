@@ -1,41 +1,92 @@
-import { useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import { UserLogin } from './pages/User_Login/UserLogin'
-import { AdminDashboard } from './pages/Admin_Dashboard/AdminDashboard'
-import { AdminLogin } from './pages/Admin_Login/AdminLogin'
-import { AdminRegister } from './pages/Admin_Login/AdminRegister'
-import { UserRegister } from './pages/User_Login/UserRegister'
-import { Result } from './pages/Result/Result'
-import { SubUserRegister } from './pages/User_Login/SubUserRegister'
-import ClassManagement from './pages/Class_Management/ClassManagement'
-import SectionManagement from './pages/Section_Management/SectionManagement'
-import UserManagement from './pages/User_Management/UserManagement'
-import SubjectManagement from './pages/Subjectmanagement/SubjectManagement'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AdminLogin from './pages/Admin_Login/AdminLogin';
+import AdminRegister from './pages/Admin_Login/AdminRegister';
+import AdminDashboard from './pages/Admin_Dashboard/AdminDashboard';
+import Result from './pages/Result/Result';
+import ClassManagement from './pages/Class_Management/ClassManagement';
+import SectionManagement from './pages/Section_Management/SectionManagement';
+import SubjectManagement from './pages/Subjectmanagement/SubjectManagement';
+import DashBoard from './pages/Dashboard/DashBoard';
+import Organization from './pages/Organization/Organization';
+import PrivateRoute from './components/PrivateRoute';
+import Department from './pages/Department/Department';
 
 function App() {
-
   return (
-    <>
-      <div className="App">
+    <div className="App" style={{height:"100vh"}}>
       <Routes>
-              <Route path="/" element={<AdminLogin/>} />
-              <Route path="/admin/register" element={<AdminRegister/>} />
-              <Route path="/user/login" element={<UserLogin/>} />
-              <Route path="/user/register" element={<UserRegister/>} />
-              <Route path="/dashboard" element={<AdminDashboard/>} />
-              <Route path="/result" element={<Result/>}/>
-              <Route path="/sub-user/register" element={<SubUserRegister/>}/>
-              <Route path="/class/management" element={<ClassManagement/>}/>
-              <Route path="/section/management" element={<SectionManagement/>}/>
-              <Route path="/user/management" element={<UserManagement/>}/>
-              <Route path="/subject" element={<SubjectManagement/>}/>
-              {/* <Route path="/" element={<PrivateRoute element={Dashboard} />} /> */}
+        <Route path="/" element={<AdminLogin />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
+      
+        <Route
+          path="/olddashboard"
+          element={
+            <PrivateRoute>
+              <AdminDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/result"
+          element={
+            <PrivateRoute>
+              <Result />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/class/management"
+          element={
+            <PrivateRoute>
+              <ClassManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/section/management"
+          element={
+            <PrivateRoute>
+              <SectionManagement />
+            </PrivateRoute>
+          }
+        />
 
-              
+        <Route
+          path="/subject"
+          element={
+            <PrivateRoute>
+              <SubjectManagement />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <DashBoard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/organization"
+          element={
+            <PrivateRoute>
+              <Organization />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/department"
+          element={
+            <PrivateRoute>
+              <Department />
+            </PrivateRoute>
+          }
+        />
       </Routes>
-      </div>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;

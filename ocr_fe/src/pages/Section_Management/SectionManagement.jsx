@@ -218,13 +218,19 @@ const SectionManagement = () => {
                             onChange={(value) => setSelectedClassId(value)}
                             style={{ width: 200 }}
                         >
+                            
                             {classes.map((classItem) => (
                                 <Option key={classItem._id} value={classItem._id}>
                                     {classItem.name}
                                 </Option>
                             ))}
+                            <Option value="" >Select Class</Option>
                         </Select>
                     </Form.Item>
+                    <hr />
+                    <br />
+                    <br />
+
                     <Form.Item>
                         <Input
                             placeholder="New Section Name"

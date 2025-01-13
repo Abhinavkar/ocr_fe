@@ -1,13 +1,4 @@
 
-  
-  body {
-    font-family: "DM Sans", sans-serif;
-    background: rgb(244, 247, 254);
-    display: flex;
-    place-items :center;
-    justify-content: center;
-
-  }
   .LoginLogoImage{
     height: 100px;
     margin: 10px;
