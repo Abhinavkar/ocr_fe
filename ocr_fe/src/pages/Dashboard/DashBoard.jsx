@@ -1,10 +1,26 @@
-import React from 'react';
+import React,{useState,useEffect,useContext} from 'react';
 import 'chart.js/auto';
 import "./Dashboard.css";
 import SideNav from '../../components/SideNav';
 import { FileOutlined,SignatureFilled,DatabaseOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { Table, Button } from 'antd';
+import { UserContext } from '../../UserContext';
 const DashBoard = () => {
+  const user = useContext(UserContext);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:8000/api/services/details-all/',{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'organizationId':user.organizationId
+      }
+    })
+      .then(response => response.json())
+      .then(data => setData(data));
+  }, []);
+  
  
   return (
     <div className='dashboard'>
@@ -43,9 +59,6 @@ const DashBoard = () => {
                             <h6 className="topic-name">User</h6>
                             <span className="topic-number">46</span>
                           </div>
-                          
-                          
-
                         </div>
                       
                       </div>
@@ -112,7 +125,7 @@ const DashBoard = () => {
                       
                       </div>
                       <div className="card-footer">
-                        <Link to='/department'  className='card-footer-link'>Conduct Exam  <SignatureFilled /></Link>
+                        <Link to='/exam'  className='card-footer-link'>Conduct Exam  <SignatureFilled /></Link>
                       </div>
                     </div>
                   </div>
@@ -256,7 +269,7 @@ const DashBoard = () => {
                       
                       </div>
                       <div className="card-footer">
-                        <Link to='/department'  className='card-footer-link'> Go to Managment Services  <FileOutlined /></Link>
+                        <Link to='/olddashboard'  className='card-footer-link'> Go to Managment Services  <FileOutlined /></Link>
                       </div>
                     </div>
                 </div>
