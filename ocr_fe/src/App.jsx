@@ -4,13 +4,14 @@ import AdminLogin from './pages/Admin_Login/AdminLogin';
 import AdminRegister from './pages/Admin_Login/AdminRegister';
 import AdminDashboard from './pages/Admin_Dashboard/AdminDashboard';
 import Result from './pages/Result/Result';
-import ClassManagement from './pages/Class_Management/ClassManagement';
-import SectionManagement from './pages/Section_Management/SectionManagement';
-import SubjectManagement from './pages/Subjectmanagement/SubjectManagement';
+import ClassManagement from './pages/Department/Class_Management/ClassManagement';
+import SectionManagement from './pages/Department/Section_Management/SectionManagement';
+import SubjectManagement from './pages/Department/Subjectmanagement/SubjectManagement';
 import DashBoard from './pages/Dashboard/DashBoard';
 import Organization from './pages/Organization/Organization';
 import PrivateRoute from './components/PrivateRoute';
 import Department from './pages/Department/Department';
+import Exam from './pages/Exam/Exam';
 
 function App() {
   return (
@@ -36,10 +37,10 @@ function App() {
           }
         />
         <Route
-          path="/class/management"
+          path="/exam"
           element={
             <PrivateRoute>
-              <ClassManagement />
+              <Exam />
             </PrivateRoute>
           }
         />

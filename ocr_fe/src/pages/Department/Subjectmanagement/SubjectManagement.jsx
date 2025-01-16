@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Table, Modal, message, Select } from 'antd';
 import './SubjectManagement.css';
-import { UserContext } from '../../UserContext';
-import SideNav from '../../components/SideNav';
+import { UserContext } from '../../../UserContext';
+import SideNav from '../../../components/SideNav';
 
 const { Option } = Select;
 const API_BASE_URL = 'http://localhost:8000/api/services/org/subjects';

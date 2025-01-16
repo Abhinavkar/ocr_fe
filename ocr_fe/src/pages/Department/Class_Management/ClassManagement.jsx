@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../../UserContext';
 import { Form, Input, Button, Table, Modal, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import SideNav from '../../components/SideNav';
+import SideNav from '../../../components/SideNav';
 import './ClassManagement.css';
 
 const API_BASE_URL = 'http://localhost:8000/api/services/classes';
