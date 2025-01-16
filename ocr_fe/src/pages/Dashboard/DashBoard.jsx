@@ -256,7 +256,7 @@ const DashBoard = () => {
                       
                       </div>
                       <div className="card-footer">
-                        <Link to='/department'  className='card-footer-link'> Go to Managment Services  <FileOutlined /></Link>
+                        <Link to='/olddashboard'  className='card-footer-link'> Go to Managment Services  <FileOutlined /></Link>
                       </div>
                     </div>
                 </div>
