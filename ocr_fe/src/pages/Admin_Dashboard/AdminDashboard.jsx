@@ -3,10 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
 import "./style.css";
 import "./style.scss";
-import LogoSvg from "../../assets/images/logo.svg";
-import DashboardPng from "../../assets/images/dashboard.png";
-import DownloadPng from "../../assets/images/download.png";
-import LogoutPng from "../../assets/images/logout.png";
 import UploadPng from "../../assets/images/upload.png";
 import CareersPng from "../../assets/images/careers.png"
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
