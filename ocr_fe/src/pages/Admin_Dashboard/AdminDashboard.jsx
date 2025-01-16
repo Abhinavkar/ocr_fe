@@ -93,7 +93,7 @@ export const AdminDashboard = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'classId': classId,
-                    'sectionId': sectionId,
+                    'sectionId': sectionId, 
                     'subjectId': subjectId,
                     'organizationId': user.organization_id,
                 },
@@ -153,7 +153,7 @@ export const AdminDashboard = () => {
         formData.append('class_selected', classSelected);
         formData.append('subject_selected', subjectSelected);
         formData.append("section_selected",sectionSelected)
-        formData.append('exam_id', examIds[0]); // Assuming the first exam ID is selected by default
+        formData.append('exam_id', examIds); 
         formData.append('upload_type', uploadType);
         formData.append('organization',user.organization_id);
         
@@ -185,7 +185,7 @@ export const AdminDashboard = () => {
             }
         }
         if (uploadType === 'image' && questionImage) {
-            formData.append('question_image', questionImage);
+            formData.append('question_paper_pdf', questionImage);
             try {
 
                 const response = await fetch('http://localhost:8000/api/qa/upload/question/pdf/', {
