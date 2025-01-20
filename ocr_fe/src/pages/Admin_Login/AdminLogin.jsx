@@ -25,7 +25,7 @@ export const AdminLogin = () => {
                         body: JSON.stringify({ username, password }),
                     });
                     if (!response.ok) {
-                        console.log(response)
+         
                         throw new Error(`Error:${response.statusText}`);
                     }
                     const data = await response.json();

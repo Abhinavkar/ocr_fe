@@ -7,14 +7,15 @@ import { Link } from 'react-router-dom';
 import { Table, Button } from 'antd';
 import { UserContext } from '../../UserContext';
 const DashBoard = () => {
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const [data, setData] = useState([]);
+  console.log(user.organization_id)
   useEffect(() => {
     fetch('http://localhost:8000/api/services/details-all/',{
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'organizationId':user.organizationId
+        'organizationId':user.organization_id
       }
     })
       .then(response => response.json())
@@ -37,7 +38,7 @@ const DashBoard = () => {
                   <div className="layout-grid-col1">
                   <div className="dashboard-card">
                       <div className="card-title">
-                        <h3 className='card-title-content'>Organization User Details </h3>
+                        <h3 className='card-title-content'>{data?.organization_name} User Details </h3>
                       
                     
                       </div>
@@ -45,19 +46,19 @@ const DashBoard = () => {
                         <div className='body-topic-row'>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Total No of Users</h6>
-                            <span className="topic-number">100</span>
+                            <span className="topic-number">{data?.total_user_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Admin</h6>
-                            <span className="topic-number">14</span>
+                            <span className="topic-number">{data?.admin_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Subadmin</h6>
-                            <span className="topic-number">40</span>
+                            <span className="topic-number">{data?.sub_admin_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">User</h6>
-                            <span className="topic-number">46</span>
+                            <span className="topic-number">{data?.user_count}</span>
                           </div>
                         </div>
                       
@@ -81,15 +82,15 @@ const DashBoard = () => {
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">No of Classes </h6>
-                            <span className="topic-number">20</span>
+                            <span className="topic-number">{data?.class_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">No of Section </h6>
-                            <span className="topic-number">24</span>
+                            <span className="topic-number">{data?.section_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">No of Subject </h6>
-                            <span className="topic-number">24</span>
+                            <span className="topic-number">{data?.subject_count}</span>
                           </div>
                           
 
@@ -109,15 +110,15 @@ const DashBoard = () => {
                         <div className='body-topic-row'>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Total Exam Conduted</h6>
-                            <span className="topic-number">34</span>
+                            <span className="topic-number">{data?.exam_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Active Exam</h6>
-                            <span className="topic-number">10</span>
+                            <span className="topic-number">{data?.active_exam_count}</span>
                           </div>
                           <div className='body-topic-row-content'>
                             <h6 className="topic-name">Inactive Exam</h6>
-                            <span className="topic-number">24</span>
+                            <span className="topic-number">{data?.inactive_exam_count}</span>
                           </div>
                           
 
