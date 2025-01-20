@@ -20,7 +20,7 @@ const SideNav = () => {
         navigate('/');
     };
 
-    const userManagementMenu = (
+    {/*const userManagementMenu = (
         <Menu>
             <Menu.Item key="1">
                 <Link to="/user/register/">Add User</Link>
@@ -46,7 +46,7 @@ const SideNav = () => {
                 <Link to="/subject">Subject Management</Link>
             </Menu.Item>
         </Menu>
-    );
+    ); */}
 
     return (
         <div className="sidenav">
@@ -65,7 +65,7 @@ const SideNav = () => {
                         <span><img src={DownloadPng} alt="Download" /></span>Result Download
                     </Link>
                 </li>
-                {(user.is_admin || user.is_sub_admin) && (
+                {/* {(user.is_admin || user.is_sub_admin) && (
                     <>
                         <li>
                             <Dropdown overlay={userManagementMenu} trigger={['click']}>
@@ -82,7 +82,7 @@ const SideNav = () => {
                             </Dropdown>
                         </li>
                     </>
-                )}
+                )}*/}
                 <li>
                     <Link to="/" onClick={handleLogout}>
                         <span><img src={LogoutPng} alt="Logout" /></span>Logout
