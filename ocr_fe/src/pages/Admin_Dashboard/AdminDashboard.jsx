@@ -307,6 +307,7 @@ export const AdminDashboard = () => {
                                                 <label className="col-sm-3 col-form-label label">Exam Id</label>
                                                 <div className="col-sm-9">
                                                     <select className="form-control" value={examIds} onChange={(e) => setExamIds(e.target.value)}>
+                                                        <option value="">select</option>
                                                         {console.log(examData)}
                                                         {examData.map((exam_id,id)=>{
                                                             return(
