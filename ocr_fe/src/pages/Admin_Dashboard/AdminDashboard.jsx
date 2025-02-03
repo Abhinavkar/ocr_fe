@@ -44,6 +44,7 @@ export const AdminDashboard = () => {
                 method: 'GET',
             });
 
+
             if (response.ok) {
                 const data = await response.json();
                 setClasses(data);

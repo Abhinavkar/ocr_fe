@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import SideNav from '../../components/SideNav';
 import './Exam.css';
 import ExamUploadAnswer from './ExamUploadAnswer/ExamUploadAnswer';
+import AdminDashboard from '../Admin_Dashboard/AdminDashboard';
 // import ExamDetails from './ExamManagement/ExamDetails';
 // import ManageExam from './ExamManagement/ManageExam';
 // import AddExam from './ExamManagement/AddExam';
@@ -33,7 +34,7 @@ const Exam = () => {
             </TabPane>
             <TabPane tab="Add Exam" key="3">
               <div className='tab-content'>
-                {/* <AddExam /> */}
+                <AdminDashboard/>
               </div>
             </TabPane>
             <TabPane tab="Exam Overview" key="4">

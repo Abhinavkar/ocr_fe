@@ -85,7 +85,7 @@ const SectionManagement = () => {
             setNewSectionName('');
             setSelectedClassId('');
             message.success('Section added successfully');
-            navigate("/dashboard")
+            navigate("/department")
 
         } catch (error) {
             console.error(error.message);

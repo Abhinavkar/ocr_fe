@@ -121,7 +121,7 @@ const SubjectManagement = () => {
             setSelectedClassId('');
             setSelectedSectionId('');
             message.success('Subject added successfully');
-            navigate('/dashboard')
+            navigate('/department')
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add subject');
@@ -141,7 +141,7 @@ const SubjectManagement = () => {
 
             setSubjects((prevSubjects) => prevSubjects.filter((subjectItem) => subjectItem._id !== subjectId));
             message.success('Subject deleted successfully');
-            navigate("/dashboard")
+            navigate("/department")
 
         } catch (error) {
             console.error(error.message);

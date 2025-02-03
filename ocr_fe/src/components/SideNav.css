@@ -84,7 +84,7 @@ ul {
 }
 
 header {
-  margin-left: 290px;
+  
   position: fixed;
   top: 0;
   right: 10px;
@@ -195,9 +195,7 @@ header .search-profile-blk .search-blk input {
   border: none;
 }
 
-.main-content {
-  margin-left: 290px;
-}
+
 
 .page-content {
   padding-top: 106px;

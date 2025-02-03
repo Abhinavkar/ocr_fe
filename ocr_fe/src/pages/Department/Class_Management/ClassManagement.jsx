@@ -56,7 +56,7 @@ const ClassManagement = () => {
             setClasses((prevClasses) => [...prevClasses, newClass]);
             setNewClassName('');
             message.success('Class added successfully');
-            navigate("/dashboard")
+            navigate("/department")
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add class');
