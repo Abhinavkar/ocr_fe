@@ -132,7 +132,7 @@ export const AdminDashboard = () => {
         localStorage.removeItem('is_admin');
         navigate('/');
     };
-    const handleNavigateResult=()=>{
+    const handleNavigateResult=()=>{    
         navigate('/result')
     }
 

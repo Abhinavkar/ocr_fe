@@ -1,8 +1,8 @@
-import React from 'react';
-import { Table, Button } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Popconfirm } from 'antd';
 
 const ExamUploadAnswer = () => {
-  const dataSource = [
+  const [dataSource, setDataSource] = useState([
     {
       key: '1',
       sno: '1',
@@ -10,7 +10,7 @@ const ExamUploadAnswer = () => {
       examId: 'EX001',
       classSubject: 'Math',
       section: 'A',
-      uploadedBy:"ABHinav",
+      uploadedBy: "Digant",
       evaluationStatus: 'Pending',
     },
     {
@@ -20,10 +20,16 @@ const ExamUploadAnswer = () => {
       examId: 'EX002',
       classSubject: 'Science',
       section: 'B',
+      uploadedBy: "Abhinav",
       evaluationStatus: 'Completed',
     },
     // Add more data as needed
-  ];
+  ]);
+
+  const handleDelete = (key) => {
+    const newDataSource = dataSource.filter((item) => item.key !== key);
+    setDataSource(newDataSource);
+  };
 
   const columns = [
     {
@@ -43,8 +49,8 @@ const ExamUploadAnswer = () => {
     },
     {
       title: 'Subject',
-      dataIndex: 'Subject',
-      key: 'Subject',
+      dataIndex: 'classSubject',
+      key: 'classSubject',
     },
     {
       title: 'Section',
@@ -57,15 +63,25 @@ const ExamUploadAnswer = () => {
       key: 'evaluationStatus',
     },
     {
-        title:'Uploaded By',
-        dataIndex:"uploadedBy",
-        key:'uploadedBy',
+      title: 'Uploaded By',
+      dataIndex: 'uploadedBy',
+      key: 'uploadedBy',
     },
     {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
-        <Button type="primary">Evaluate</Button>
+        <>
+          <Button type="primary" style={{ marginRight: 8 }}>Evaluate</Button>
+          <Popconfirm
+            title="Are you sure to delete this record?"
+            onConfirm={() => handleDelete(record.key)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="danger">Delete</Button>
+          </Popconfirm>
+        </>
       ),
     },
   ];
