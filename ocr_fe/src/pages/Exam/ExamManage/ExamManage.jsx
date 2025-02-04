@@ -24,6 +24,7 @@ const ExamManage = () => {
           class: exam.class_name,
           classSubject: exam.subject_name,
           section: exam.section_name,
+          isActive: exam.is_active ? 'Active' : 'Inactive', // Map is_active to a readable format
         }));
 
         setDataSource(examData);  // Set the fetched data in the table
@@ -36,15 +37,59 @@ const ExamManage = () => {
     }
   };
 
+  // Function to update exam status
+  const handleUpdateStatus = async (examId, currentStatus) => {
+    try {
+      const newStatus = currentStatus === 'Active' ? false : true;
+      const response = await axios.put('http://localhost:8000/api/services/update/exam-id/', {
+        examId: examId,
+        is_active: newStatus,
+      }, {
+        headers: {
+          'userId': user.id,
+        },
+      });
+
+      if (response.status === 200) {
+        message.success('Exam status updated successfully.');
+        fetchExamData(); // Refresh the data
+      } else {
+        message.error('Failed to update exam status.');
+      }
+    } catch (error) {
+      console.error('Error updating exam status:', error);
+      message.error('Failed to update exam status.');
+    }
+  };
+
+  // Function to delete exam
+  const handleDelete = async (examId) => {
+    try {
+      const response = await axios.delete('http://localhost:8000/api/services/delete/exam-id/', {
+        headers: {
+          'userId': user.id,
+        },
+        data: {
+          examId: examId,
+        },
+      });
+
+      if (response.status === 200) {
+        message.success('Exam deleted successfully.');
+        fetchExamData(); // Refresh the data
+      } else {
+        message.error('Failed to delete exam.');
+      }
+    } catch (error) {
+      console.error('Error deleting exam:', error);
+      message.error('Failed to delete exam.');
+    }
+  };
+
   // Call fetch function when the component is mounted
   useEffect(() => {
     fetchExamData();
   }, []);
-
-  const handleDelete = (key) => {
-    const newDataSource = dataSource.filter((item) => item.key !== key);
-    setDataSource(newDataSource);
-  };
 
   const columns = [
     {
@@ -73,24 +118,34 @@ const ExamManage = () => {
       key: 'section',
     },
     {
-        title:"Status",
-        dataIndex:"is_active",
-        key:"is_active"
+      title: 'Status',
+      dataIndex: 'isActive',
+      key: 'isActive',
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: 'Update Status',
+      key: 'updateStatus',
       render: (text, record) => (
-        <>
-          <Popconfirm
-            title="Are you sure to delete this record?"
-            onConfirm={() => handleDelete(record.key)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="danger">Delete</Button>
-          </Popconfirm>
-        </>
+        <Button
+          type="primary"
+          onClick={() => handleUpdateStatus(record.examId, record.isActive)}
+        >
+          {record.isActive === 'Active' ? 'Deactivate' : 'Activate'}
+        </Button>
+      ),
+    },
+    {
+      title: 'Delete',
+      key: 'delete',
+      render: (text, record) => (
+        <Popconfirm
+          title="Are you sure to delete this record?"
+          onConfirm={() => handleDelete(record.examId)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="danger">Delete</Button>
+        </Popconfirm>
       ),
     },
   ];
