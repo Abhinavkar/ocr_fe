@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import './Result.css';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
-import { Table, Button } from 'antd';
+import { Table, Button, message } from 'antd';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import SideNav from '../../components/SideNav';
@@ -15,52 +15,61 @@ export const Result = () => {
     const [sections, setSections] = useState([]);
 
     useEffect(() => {
-        const fetchResults = async () => {
-            const response = await fetch('http://localhost:8000/api/qa/results/', {
-                method: 'GET',
-                headers: {
-                    'organizationId': user.organization_id,
-                },
-            });
+        if (!user || !user.organization_id || !user.id) return;
 
-            if (response.ok) {
+        const fetchResults = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/qa/results/', {
+                    method: 'GET',
+                    headers: {
+                        'organizationId': user.organization_id,
+                    },
+                });
+        
+                if (!response.ok) throw new Error('Failed to fetch results');
+        
                 const data = await response.json();
-                setResults(data);
+                console.log('Results:', data);
+                setResults(data?.results);  // Ensure data is an array
+            } catch (error) {
+                console.error('Error fetching results:', error);
+                setResults([]);  // Prevent undefined state
             }
         };
+        
 
         const fetchClasses = async () => {
-            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
-                method: 'GET',
-                headers: {
-                    'userId': user.id,
-                },
-            });
-
-            if (response.ok) {
+            try {
+                const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
+                    method: 'GET',
+                    headers: { 'userId': user.id },
+                });
+                if (!response.ok) throw new Error('Failed to fetch classes');
                 const data = await response.json();
                 setClasses(data);
+            } catch (error) {
+                console.error('Error fetching classes:', error);
             }
         };
 
-        const fetchSection = async () => {
-            const response = await fetch(`http://localhost:8000/api/services/sections/`, {
-                method: 'GET',
-                headers: {
-                    'userId': user.id,
-                },
-            });
-
-            if (response.ok) {
+        const fetchSections = async () => {
+            try {
+                const response = await fetch(`http://localhost:8000/api/services/sections/`, {
+                    method: 'GET',
+                    headers: { 'userId': user.id },
+                });
+                if (!response.ok) throw new Error('Failed to fetch sections');
                 const data = await response.json();
                 setSections(data);
+            } catch (error) {
+                console.error('Error fetching sections:', error);
             }
         };
 
-        fetchSection();
         fetchResults();
         fetchClasses();
-    }, [user.organization_id, user.id]);
+        fetchSections();
+    }, [user]);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -68,7 +77,7 @@ export const Result = () => {
         navigate('/');
     };
 
-    const handleDownload = async (result) => {
+    const handleDownload = (result) => {
         const doc = new jsPDF();
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
@@ -77,13 +86,13 @@ export const Result = () => {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(`${user.organization}`, 105, 30, { align: 'center' });
+        doc.text(user.organization || 'Unknown Organization', 105, 30, { align: 'center' });
+
         doc.setLineWidth(0.5);
-        doc.setDrawColor(0, 0, 0);
         doc.line(10, 35, 200, 35);
+
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0);
         doc.text('Document ID:', 10, 45);
         doc.text('Exam ID:', 10, 55);
         doc.text('Class:', 10, 65);
@@ -92,33 +101,28 @@ export const Result = () => {
         doc.text('Roll No:', 10, 95);
         doc.text('Score:', 10, 105);
         doc.text('Document Uploaded By:', 10, 115);
+
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 128);
-        doc.text(`${result._id}`, 60, 45);
-        doc.text(`${result.exam_id}`, 60, 55);
-        doc.text(`${result.class_name}`, 60, 65);
-        doc.text(`${result.section_name}`, 60, 75);
-        doc.text(`${result.subject_name}`, 60, 85);
-        doc.text(`${result.roll_no}`, 60, 95);
-        doc.text(`${result.scores}`, 60, 105);
+        doc.text(`${result?._id}`, 60, 45);
+        doc.text(`${result?.exam_id}`, 60, 55);
+        doc.text(`${result?.class_name}`, 60, 65);
+        doc.text(`${result?.section_name}`, 60, 75);
+        doc.text(`${result?.subject_name}`, 60, 85);
+        doc.text(`${result?.roll_no}`, 60, 95);
+        doc.text(`${result?.scores}`, 60, 105);
         doc.text('Abhinav Kar', 60, 115);
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'italic');
-        doc.setTextColor(128, 128, 128);
-        doc.text('Generated by OCR System', 105, 285, { align: 'center' });
 
-        // Add a table for the results
         const tableColumn = ["Question", "User Answer", "Model Answer", "Score"];
         const tableRows = [];
 
         result.results.forEach(item => {
-            const rowData = [
+            tableRows.push([
                 item.question,
                 Object.values(item.user_answer).join("\n"),
                 item.model_generated_answer,
                 Object.values(item.scores).join("\n")
-            ];
-            tableRows.push(rowData);
+            ]);
         });
 
         doc.autoTable({
@@ -133,8 +137,12 @@ export const Result = () => {
         doc.save(`result_${result._id}.pdf`);
     };
 
-    const handleTableChange = (pagination, filters, sorter) => {
-        console.log('Table params:', pagination, filters, sorter);
+    const handleDelete = (record) => {
+        message.warning(`Delete functionality for result ID ${record._id} not implemented yet.`);
+    };
+
+    const handleReevaluate = (record) => {
+        message.info(`Reevaluation for result ID ${record._id} initiated.`);
     };
 
     const columns = [
@@ -143,17 +151,11 @@ export const Result = () => {
             dataIndex: 'sno',
             key: 'sno',
             render: (text, record, index) => index + 1,
-            sorter: (a, b) => a.sno - b.sno,
         },
         {
             title: 'Exam ID',
             dataIndex: 'exam_id',
             key: 'exam_id',
-            // filters: [
-            //     { text: 'Exam 1', value: 'Exam 1' },
-            //     { text: 'Exam 2', value: 'Exam 2' },
-            // ],
-            // onFilter: (value, record) => record.exam_id.includes(value),
             sorter: (a, b) => a.exam_id.localeCompare(b.exam_id),
         },
         {
@@ -175,8 +177,8 @@ export const Result = () => {
         {
             title: 'Subject',
             dataIndex: 'subject_name',
-            key: 'subjects',
-            sorter: (a, b) => a.subjects.localeCompare(b.subjects),
+            key: 'subject_name',
+            sorter: (a, b) => a.subject_name.localeCompare(b.subject_name),
         },
         {
             title: 'Roll No',
@@ -191,30 +193,19 @@ export const Result = () => {
             sorter: (a, b) => a.similarity_score - b.similarity_score,
         },
         {
-            title: 'Document Uploaded By',
-            dataIndex: 'uploaded_by',
+            title: 'Uploaded By',
             key: 'uploaded_by',
             render: () => 'Digant Mohanty',
         },
         {
-            title: 'Get Report',
-            key: 'action',
+            title: 'Actions',
+            key: 'actions',
             render: (text, record) => (
-                <Button onClick={() => handleDownload(record)}>Download</Button>
-            ),
-        },
-        {
-            title: 'Reevaluate',
-            key: 'action',
-            render: (text, record) => (
-                <Button>Reevaluate</Button>
-            ),
-        },
-        {
-            title: 'Delete',
-            key: 'action',
-            render: (text, record) => (
-                <Button>Delete</Button>
+                <>
+                    <Button onClick={() => handleDownload(record)}>Download</Button>
+                    <Button onClick={() => handleReevaluate(record)}>Reevaluate</Button>
+                    <Button onClick={() => handleDelete(record)}>Delete</Button>
+                </>
             ),
         },
     ];
@@ -223,18 +214,8 @@ export const Result = () => {
         <div className="result-page">
             <SideNav />
             <div className="result-content">
-                <div className="result-container">
-                    <h2>{user.organization} Results</h2>
-                    <Table
-                        columns={columns}
-                        dataSource={results}
-                        rowKey="document_id"
-                        onChange={handleTableChange}
-                    />
-                </div>
-                <div>
-                    Result Reevaluation Section
-                </div>
+                <h2>{user.organization} Results</h2>
+                <Table columns={columns} dataSource={results} rowKey="_id" />
             </div>
         </div>
     );
