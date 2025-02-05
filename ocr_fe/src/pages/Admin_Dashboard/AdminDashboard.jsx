@@ -288,6 +288,10 @@ export const AdminDashboard = () => {
     fetchUploadedFiles();
     fetchClassApi();
 }, [user.organization_id]);
+const handleView = (url) => {
+    window.open(url, '_blank');
+};
+
     return (
         <>
             <div>
@@ -433,10 +437,11 @@ export const AdminDashboard = () => {
                                         <thead>
                                             <tr>
                                                 <th>Class <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
+                                                <th>Section <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
                                                 <th>Subject <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
                                                 <th>PDF Name <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
                                                 <th>Question Name <span><img src={ArrowDownSvg} alt="Arrow" /></span></th>
-                                                <th>Action</th>
+                                                {/* <th>Action</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -444,6 +449,7 @@ export const AdminDashboard = () => {
                                                 uploadedFiles.map((file, index) => (
                                                     <tr key={index}>
                                                     <td>{file.class_name}</td>
+                                                    <td>{file.section_name}</td>
                                                     <td>{file.subject_name}</td>
                                                     {/* <td>{file.course_pdf_url}</td> */}
                                                     <td>
@@ -462,12 +468,12 @@ export const AdminDashboard = () => {
                                                         >View Question PDF</button>
                                                     ) : 'Question Pdf Not Uploaded'}
                                                 </td>
-                                                    <td>
+                                                    {/* <td>
                                                         <button
                                                             onClick={() => handleDelete(file.course_pdf_url || file.question_pdf_url)}
                                                             className="btn btn-danger"
                                                         >Delete</button>
-                                                    </td>
+                                                    </td> */}
                                                 </tr>
                                                 ))
                                             ) : (
