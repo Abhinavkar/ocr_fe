@@ -26,36 +26,70 @@ export const AdminDashboard = () => {
     const [isUploading, setIsUploading] = useState(false); 
     const [examData , SetExamData] = useState([])
     
-    useEffect(() => {
-        const fetchUploadedFiles = async () => {
+    // useEffect(() => {
+    //     const fetchUploadedFiles = async () => {
          
-            const response = await fetch('http://localhost:8000/api/qa/documents/', {
-                method: 'GET',
+    //         const response = await fetch('http://localhost:8000/api/qa/documents/', {
+    //             method: 'GET',
 
-            });
+    //         });
 
-            if (response.ok) {
-                const data = await response.json();
-                setUploadedFiles(data.documents || []);
-            }
-        };
-        const fetchClassApi = async () => {
-            const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
-                method: 'GET',
-            });
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             setUploadedFiles(data.documents || []);
+    //         }
+    //     };
+    //     const fetchClassApi = async () => {
+    //         const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
+    //             method: 'GET',
+    //         });
 
 
-            if (response.ok) {
-                const data = await response.json();
-                setClasses(data);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             setClasses(data);
              
-            }
-        };
+    //         }
+    //     };
 
       
-        fetchUploadedFiles();
-        fetchClassApi();
-    }, [user.organization_id]);
+    //     fetchUploadedFiles();
+    //     fetchClassApi();
+    // }, [user.organization_id]);
+    useEffect(() => {
+        const fetchUploadedFiles = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/services/documents-list/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': user.organization_id,
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUploadedFiles(data);
+                } else {
+                    setMessage('Failed to fetch uploaded files');
+                }
+            } catch (error) {
+                setMessage('An error occurred while fetching uploaded files');
+            }
+        };
+    const fetchClassApi = async () => {
+        const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
+            method: 'GET',
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setClasses(data);
+        }
+    };
+
+    fetchUploadedFiles();
+    fetchClassApi();
+}, [user.organization_id]);
 
     const fetchSectionApi = async (classId) => {
         const response = await fetch(`http://localhost:8000/api/services/sections/${classId}/`, {
@@ -220,23 +254,40 @@ export const AdminDashboard = () => {
         navigate('/add-subadmin');
     };
 
-    const handleDelete = async (pdfName) => {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8000/api/qa/admin/upload/pdf/delete/${pdfName}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
+    useEffect(() => {
+        const fetchUploadedFiles = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/services/documents-list/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'organizationId': user.organization_id,
+                    },
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUploadedFiles(data);
+                } else {
+                    setMessage('Failed to fetch uploaded files');
+                }
+            } catch (error) {
+                setMessage('An error occurred while fetching uploaded files');
+            }
+        };
+    const fetchClassApi = async () => {
+        const response = await fetch(`http://localhost:8000/api/services/classes/${user.organization_id}`, {
+            method: 'GET',
         });
 
         if (response.ok) {
-            setUploadedFiles(uploadedFiles.filter(file => file.pdf_name !== pdfName));
-        } else {
-            const errorData = await response.json();
-            setMessage(errorData.message || "An error occurred during the deletion.");
+            const data = await response.json();
+            setClasses(data);
         }
     };
 
+    fetchUploadedFiles();
+    fetchClassApi();
+}, [user.organization_id]);
     return (
         <>
             <div>
@@ -392,17 +443,32 @@ export const AdminDashboard = () => {
                                             {uploadedFiles.length > 0 ? (
                                                 uploadedFiles.map((file, index) => (
                                                     <tr key={index}>
-                                                        <td>{file.class}</td>
-                                                        <td>{file.subject}</td>
-                                                        <td>{file.pdf_name}</td>
-                                                        <td>{file.question_name}</td>
-                                                        <td>
-                                                            <button
-                                                            onClick={() => handleDelete(file.pdf_name)}
+                                                    <td>{file.class_name}</td>
+                                                    <td>{file.subject_name}</td>
+                                                    {/* <td>{file.course_pdf_url}</td> */}
+                                                    <td>
+                                                    {file.course_pdf_url ? (
+                                                        <button
+                                                            onClick={() => handleView(file.course_pdf_url)}
+                                                            className="btn btn-primary"
+                                                        >View Course PDF</button>
+                                                    ) : 'Course Pdf Not Uploaded'} </td>
+                                                    {/* <td>{file.question_pdf_url}</td> */}
+                                                    <td>
+                                                    {file.question_pdf_url ? (
+                                                        <button
+                                                            onClick={() => handleView(file.question_pdf_url)}
+                                                            className="btn btn-primary"
+                                                        >View Question PDF</button>
+                                                    ) : 'Question Pdf Not Uploaded'}
+                                                </td>
+                                                    <td>
+                                                        <button
+                                                            onClick={() => handleDelete(file.course_pdf_url || file.question_pdf_url)}
                                                             className="btn btn-danger"
-                                                            >Delete</button>
-                                                        </td>
-                                                    </tr>
+                                                        >Delete</button>
+                                                    </td>
+                                                </tr>
                                                 ))
                                             ) : (
                                                 <tr><td colSpan="5">No documents uploaded yet.</td></tr>
