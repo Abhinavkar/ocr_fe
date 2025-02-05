@@ -7,6 +7,7 @@ import AdminDashboard from '../Admin_Dashboard/AdminDashboard';
 // import ExamDetails from './ExamManagement/ExamDetails';
 // import ManageExam from './ExamManagement/ManageExam';
 // import AddExam from './ExamManagement/AddExam';
+import ExamManage from './ExamManage/ExamManage';
 
 const { TabPane } = Tabs;
 
@@ -29,7 +30,7 @@ const Exam = () => {
             </TabPane>
             <TabPane tab="Manage Exam" key="2">
               <div className='tab-content'>
-                {/* <ManageExam /> */}
+                <ExamManage/>
               </div>
             </TabPane>
             <TabPane tab="Add Exam" key="3">
