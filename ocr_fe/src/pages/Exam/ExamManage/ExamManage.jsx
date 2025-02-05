@@ -108,15 +108,16 @@ const ExamManage = () => {
       key: 'class',
     },
     {
-      title: 'Subject',
-      dataIndex: 'classSubject',
-      key: 'classSubject',
-    },
-    {
       title: 'Section',
       dataIndex: 'section',
       key: 'section',
     },
+    {
+      title: 'Subject',
+      dataIndex: 'classSubject',
+      key: 'classSubject',
+    },
+    
     {
       title: 'Status',
       dataIndex: 'isActive',
