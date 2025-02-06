@@ -79,64 +79,97 @@ export const Result = () => {
 
     const handleDownload = (result) => {
         const doc = new jsPDF();
+        const pageHeight = doc.internal.pageSize.height;
+        const margin = 20;
+        let startY = margin;
+    
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 128);
-        doc.text('Student Result Card', 105, 20, { align: 'center' });
+        doc.text('Student Result Card', 105, startY, { align: 'center' , });
+        startY += 10;
+        
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(user.organization || 'Unknown Organization', 105, 30, { align: 'center' });
-
+        doc.text(result.organization || 'Unknown Organization', 105, startY, { align: 'center' });
+        startY += 10;
+    
         doc.setLineWidth(0.5);
-        doc.line(10, 35, 200, 35);
-
+        doc.line(10, startY, 200, startY);
+        startY += 10;
+    
+        // General Info
+        const generalInfo = [
+            ['Document ID:', result?._id],
+            ['Exam ID:', result?.exam_id],
+            ['Class:', result?.class_name],
+            ['Section:', result?.section_name],
+            ['Subject:', result?.subject_name],
+            ['Roll No:', result?.roll_no],
+            ['Score:', result?.scores],
+            ['Document Uploaded By:', 'Abhinav Kar']
+        ];
+    
         doc.setFontSize(12);
+        generalInfo.forEach(([label, value]) => {
+            if (startY > pageHeight - margin) {
+                doc.addPage();
+                startY = margin;
+            }
+            doc.setFont('helvetica', 'bold');
+            doc.text(label, 10, startY);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(0, 0, 128);
+            doc.text(String(value), 60, startY);
+            startY += 8;
+        });
+    
+        // Question Results
+        if (startY > pageHeight - margin) {
+            doc.addPage();
+            startY = margin;
+        }
+        
+        doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
-        doc.text('Document ID:', 10, 45);
-        doc.text('Exam ID:', 10, 55);
-        doc.text('Class:', 10, 65);
-        doc.text('Section:', 10, 75);
-        doc.text('Subject:', 10, 85);
-        doc.text('Roll No:', 10, 95);
-        doc.text('Score:', 10, 105);
-        doc.text('Document Uploaded By:', 10, 115);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(0, 0, 128);
-        doc.text(`${result?._id}`, 60, 45);
-        doc.text(`${result?.exam_id}`, 60, 55);
-        doc.text(`${result?.class_name}`, 60, 65);
-        doc.text(`${result?.section_name}`, 60, 75);
-        doc.text(`${result?.subject_name}`, 60, 85);
-        doc.text(`${result?.roll_no}`, 60, 95);
-        doc.text(`${result?.scores}`, 60, 105);
-        doc.text('Abhinav Kar', 60, 115);
-
-        const tableColumn = ["Question", "User Answer", "Model Answer", "Score"];
-        const tableRows = [];
-
-        result.results.forEach(item => {
-            tableRows.push([
-                item.question,
-                Object.values(item.user_answer).join("\n"),
-                item.model_generated_answer,
-                Object.values(item.scores).join("\n")
-            ]);
+        doc.text('Question Results:', 10, startY);
+        startY += 10;
+    
+        // Process each result
+        result.results.forEach((item, index) => {
+            const addText = (label, text) => {
+                if (startY > pageHeight - margin) {
+                    doc.addPage();
+                    startY = margin;
+                }
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 10, startY);
+                doc.setFont('helvetica', 'normal');
+                const wrappedText = doc.splitTextToSize(text, 140);
+                doc.text(wrappedText, 60, startY);
+                startY += wrappedText.length * 6;
+            };
+    
+            addText('Question:', item.question);
+            addText('User Answer:', Object.values(item.user_answer).join("\n"));
+            addText('Model Answer:', item.model_generated_answer);
+            addText('Score:', Object.values(item.scores).join("\n"));
+    
+            if (index < result.results.length - 1) {
+                doc.setLineWidth(0.5);
+                doc.line(10, startY, 200, startY);
+                startY += 5;
+            }
         });
-
-        doc.autoTable({
-            head: [tableColumn],
-            body: tableRows,
-            startY: 130,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 0, 128] },
-            styles: { fontSize: 10, cellPadding: 3 },
-        });
-
+    
+        // Save the PDF
         doc.save(`result_${result._id}.pdf`);
     };
-
+    
+    
+    
+    
     const handleDelete = (record) => {
         message.warning(`Delete functionality for result ID ${record._id} not implemented yet.`);
     };
