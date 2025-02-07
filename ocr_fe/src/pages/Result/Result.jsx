@@ -99,7 +99,8 @@ export const Result = () => {
         doc.text('Section:', 10, 75);
         doc.text('Subject:', 10, 85);
         doc.text('Roll No:', 10, 95);
-        doc.text('Score:', 10, 105);
+        doc.text('Total Score:', 10, 105);
+        doc.text('Average Score:', 10, 115);
         doc.text('Document Uploaded By:', 10, 115);
 
         doc.setFont('helvetica', 'normal');
@@ -110,7 +111,8 @@ export const Result = () => {
         doc.text(`${result?.section_name}`, 60, 75);
         doc.text(`${result?.subject_name}`, 60, 85);
         doc.text(`${result?.roll_no}`, 60, 95);
-        doc.text(`${result?.scores}`, 60, 105);
+        doc.text(`${result?.total_score}`, 60, 105); 
+        doc.text(`${result?.average_score}`, 60, 105);
         doc.text('Abhinav Kar', 60, 115);
 
         const tableColumn = ["Question", "User Answer", "Model Answer", "Score"];
@@ -187,15 +189,21 @@ export const Result = () => {
             sorter: (a, b) => a.roll_no - b.roll_no,
         },
         {
-            title: 'Score',
-            dataIndex: 'similarity_score',
-            key: 'similarity_score',
-            sorter: (a, b) => a.similarity_score - b.similarity_score,
+            title: 'Total Score',
+            dataIndex: 'total_score',
+            key: 'total_score',
+            sorter: (a, b) => a.total_score - b.total_score,
+        },
+        {
+            title: 'Avg Score',
+            dataIndex: 'average_score',
+            key: 'average_score',
+            sorter: (a, b) => a.average_score - b.average_score,
         },
         {
             title: 'Uploaded By',
             key: 'uploaded_by',
-            render: () => 'Digant Mohanty',
+            render: () => 'Ritu Choudhary',
         },
         {
             title: 'Actions',
