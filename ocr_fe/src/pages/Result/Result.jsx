@@ -144,8 +144,7 @@ export const Result = () => {
             y += 6;
     
             doc.setFont('helvetica', 'normal');
-            question=item.question.strip('\n')
-            print(question)
+            // question=item.question.strip('\n')
             let questionLines = doc.splitTextToSize(item.question, 180);
             doc.text(questionLines, 15, y);
             y += questionLines.length * 6;
