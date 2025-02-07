@@ -79,28 +79,25 @@ export const Result = () => {
 
     const handleDownload = (result) => {
         const doc = new jsPDF();
-        const pageHeight = doc.internal.pageSize.height;
-        const margin = 20;
-        let startY = margin;
-    
+        
+        // Title
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 128);
-        doc.text('Student Result Card', 105, startY, { align: 'center' , });
-        startY += 10;
-        
+        doc.text('Student Result Card', 105, 20, { align: 'center' });
+    
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(result.organization || 'Unknown Organization', 105, startY, { align: 'center' });
-        startY += 10;
+        doc.text(user.organization || 'Unknown Organization', 105, 30, { align: 'center' });
     
         doc.setLineWidth(0.5);
-        doc.line(10, startY, 200, startY);
-        startY += 10;
+        doc.line(10, 35, 200, 35);
     
-        // General Info
-        const generalInfo = [
+        // General Information
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        const info = [
             ['Document ID:', result?._id],
             ['Exam ID:', result?.exam_id],
             ['Class:', result?.class_name],
@@ -110,62 +107,91 @@ export const Result = () => {
             ['Score:', result?.scores],
             ['Document Uploaded By:', 'Abhinav Kar']
         ];
-    
-        doc.setFontSize(12);
-        generalInfo.forEach(([label, value]) => {
-            if (startY > pageHeight - margin) {
-                doc.addPage();
-                startY = margin;
-            }
-            doc.setFont('helvetica', 'bold');
-            doc.text(label, 10, startY);
+        
+        let y = 45;
+        info.forEach(([label, value]) => {
+            doc.text(label, 10, y);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(0, 0, 128);
-            doc.text(String(value), 60, startY);
-            startY += 8;
+            doc.text(String(value || 'N/A'), 60, y);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 0, 0);
+            y += 10;
         });
     
-        // Question Results
-        if (startY > pageHeight - margin) {
-            doc.addPage();
-            startY = margin;
-        }
-        
-        doc.setFontSize(14);
+        doc.line(10, y, 200, y);
+        y += 10;
+    
+        // Table Header
+        doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.text('Question Results:', 10, startY);
-        startY += 10;
+        doc.setFillColor(200, 200, 200); // Light Gray Background
+        doc.rect(10, y, 190, 10, 'F'); // Background Box
+        doc.setTextColor(0, 0, 0);
+        doc.text('Question-wise Details', 105, y + 7, { align: 'center' });
+        y += 15;
     
-        // Process each result
+        const pageHeight = doc.internal.pageSize.height;
+        
         result.results.forEach((item, index) => {
-            const addText = (label, text) => {
-                if (startY > pageHeight - margin) {
-                    doc.addPage();
-                    startY = margin;
-                }
-                doc.setFont('helvetica', 'bold');
-                doc.text(label, 10, startY);
-                doc.setFont('helvetica', 'normal');
-                const wrappedText = doc.splitTextToSize(text, 140);
-                doc.text(wrappedText, 60, startY);
-                startY += wrappedText.length * 6;
-            };
-    
-            addText('Question:', item.question);
-            addText('User Answer:', Object.values(item.user_answer).join("\n"));
-            addText('Model Answer:', item.model_generated_answer);
-            addText('Score:', Object.values(item.scores).join("\n"));
-    
-            if (index < result.results.length - 1) {
-                doc.setLineWidth(0.5);
-                doc.line(10, startY, 200, startY);
-                startY += 5;
+            if (y > pageHeight - 40) {
+                doc.addPage();
+                y = 20;
             }
+    
+            doc.setFont('helvetica', 'bold');
+            doc.text(`Q${index + 1}:`, 10, y);
+            y += 6;
+    
+            doc.setFont('helvetica', 'normal');
+            question=item.question.strip('\n')
+            print(question)
+            let questionLines = doc.splitTextToSize(item.question, 180);
+            doc.text(questionLines, 15, y);
+            y += questionLines.length * 6;
+    
+            const fields = [
+                ['User Answer:', Object.values(item.user_answer).join("\n")],
+                ['Model Answer:', item.model_generated_answer],
+                ['Score:', Object.values(item.scores).join("\n")]
+            ];
+    
+            fields.forEach(([label, text]) => {
+                if (y > pageHeight - 40) {
+                    doc.addPage();
+                    y = 20;
+                }
+    
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 10, y);
+                y += 6;
+                doc.setFont('helvetica', 'normal');
+                let lines = doc.splitTextToSize(text, 180);
+                doc.text(lines, 15, y);
+                y += lines.length * 6 + 4;
+            });
+    
+            if (y > pageHeight - 30) {
+                doc.addPage();
+                y = 20;
+            }
+            doc.setLineWidth(0.5);
+            doc.line(10, y, 200, y);
+            y += 10;
         });
     
-        // Save the PDF
+        // Footer with Date & Page Number
+        let pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 10, pageHeight - 10);
+            doc.text(`Page ${i} of ${pageCount}`, 180, pageHeight - 10);
+        }
+    
         doc.save(`result_${result._id}.pdf`);
     };
+    
     
     
     
@@ -220,15 +246,21 @@ export const Result = () => {
             sorter: (a, b) => a.roll_no - b.roll_no,
         },
         {
-            title: 'Score',
-            dataIndex: 'similarity_score',
-            key: 'similarity_score',
-            sorter: (a, b) => a.similarity_score - b.similarity_score,
+            title: 'Total Score',
+            dataIndex: 'total_score',
+            key: 'total_score',
+            sorter: (a, b) => a.total_score - b.total_score,
+        },
+        {
+            title: 'Avg Score',
+            dataIndex: 'average_score',
+            key: 'average_score',
+            sorter: (a, b) => a.average_score - b.average_score,
         },
         {
             title: 'Uploaded By',
             key: 'uploaded_by',
-            render: () => 'Digant Mohanty',
+            render: () => 'Ritu Choudhary',
         },
         {
             title: 'Actions',
