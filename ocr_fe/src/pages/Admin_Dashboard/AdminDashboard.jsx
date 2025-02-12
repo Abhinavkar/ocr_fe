@@ -6,8 +6,11 @@ import "./style.scss";
 import UploadPng from "../../assets/images/upload.png";
 import CareersPng from "../../assets/images/careers.png"
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
+import tooltipPng from "../../assets/images/tooltip.png";
 import SideNav from '../../components/SideNav';
 import { Tooltip, Button, Flex } from 'antd';
+
+
 
 export const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -394,12 +397,12 @@ const handleView = (url) => {
                                                         onChange={(e) => setUploadType(e.target.value)}
                                                     >
                                                         <option value="pdf">Course PDF</option>
-                                                        <option value="image">Question Paper   </option>
+                                                        <option value="image">Question Paper</option>
                                                     </select>
                                                     <div>
                                                            
-                                                           <Tooltip title="Upload your files here">
-                                                              i
+                                                           <Tooltip title="Please upload your questions in the correct format, ensuring that each question is properly numbered. Accepted only pdf format">
+                                                                <Button type="primary" shape="circle" icon={<img src={CareersPng} alt="" />} />
                                                            </Tooltip>
                                                     </div>
                                                     </div>
