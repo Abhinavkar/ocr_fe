@@ -7,6 +7,7 @@ import UploadPng from "../../assets/images/upload.png";
 import CareersPng from "../../assets/images/careers.png"
 import ArrowDownSvg from "../../assets/images/arrow-down.svg";
 import SideNav from '../../components/SideNav';
+import { Tooltip, Button, Flex } from 'antd';
 
 export const AdminDashboard = () => {
     const navigate = useNavigate();
@@ -382,7 +383,10 @@ const handleView = (url) => {
                                         <form className="formUpload" onSubmit={handleFileUpload}>
                                             <div className="form-group d-flex">
                                             <label className="col-sm-7 col-form-label label">Upload</label>
+                                        
+                                                     
                                                 <div className="col-sm-9">
+                                                    <div style={{display:"flex",justifyContent:"space-between",gap:"10px"}}> 
                                                     <select 
                                                         id="uploadType" 
                                                         className="form-control" 
@@ -390,8 +394,16 @@ const handleView = (url) => {
                                                         onChange={(e) => setUploadType(e.target.value)}
                                                     >
                                                         <option value="pdf">Course PDF</option>
-                                                        <option value="image">Question Paper</option>
+                                                        <option value="image">Question Paper   </option>
                                                     </select>
+                                                    <div>
+                                                           
+                                                           <Tooltip title="Upload your files here">
+                                                              i
+                                                           </Tooltip>
+                                                    </div>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
 
