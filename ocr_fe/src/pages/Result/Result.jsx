@@ -79,8 +79,18 @@ export const Result = () => {
 
     const handleDownload = (result) => {
         const doc = new jsPDF();
-        
-        // Title
+        const pageHeight = doc.internal.pageSize.height;
+        let y = 45; // Start Y position
+    
+        // Function to check and add a new page if necessary
+        const checkPageLimit = (heightNeeded) => {
+            if (y + heightNeeded > pageHeight - 20) { // Ensure space before adding new content
+                doc.addPage();
+                y = 20; // Reset Y for new page
+            }
+        };
+    
+        // Title Section
         doc.setFontSize(18);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 128);
@@ -89,12 +99,13 @@ export const Result = () => {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(user.organization || 'Unknown Organization', 105, 30, { align: 'center' });
+        doc.text(result?.organization || 'Unknown Organization', 105, 30, { align: 'center' });
     
         doc.setLineWidth(0.5);
         doc.line(10, 35, 200, 35);
+        y = 45; 
     
-        // General Information
+        // General Info
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         const info = [
@@ -108,8 +119,8 @@ export const Result = () => {
             ['Document Uploaded By:', 'Abhinav Kar']
         ];
         
-        let y = 45;
         info.forEach(([label, value]) => {
+            checkPageLimit(10);
             doc.text(label, 10, y);
             doc.setFont('helvetica', 'normal');
             doc.setTextColor(0, 0, 128);
@@ -123,22 +134,18 @@ export const Result = () => {
         y += 10;
     
         // Table Header
+        checkPageLimit(15);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.setFillColor(200, 200, 200); // Light Gray Background
-        doc.rect(10, y, 190, 10, 'F'); // Background Box
+        doc.setFillColor(200, 200, 200); 
+        doc.rect(10, y, 190, 10, 'F');
         doc.setTextColor(0, 0, 0);
         doc.text('Question-wise Details', 105, y + 7, { align: 'center' });
         y += 15;
     
-        const pageHeight = doc.internal.pageSize.height;
-        
+        // Iterate over results
         result.results.forEach((item, index) => {
-            if (y > pageHeight - 40) {
-                doc.addPage();
-                y = 20;
-            }
-    
+            checkPageLimit(10);
             doc.setFont('helvetica', 'bold');
             doc.text(`Q${index + 1}:`, 10, y);
             y += 6;
@@ -146,8 +153,12 @@ export const Result = () => {
             doc.setFont('helvetica', 'normal');
             // question=item.question.strip('\n')
             let questionLines = doc.splitTextToSize(item.question, 180);
-            doc.text(questionLines, 15, y);
-            y += questionLines.length * 6;
+    
+            questionLines.forEach((line) => {
+                checkPageLimit(6);
+                doc.text(line, 15, y);
+                y += 6;
+            });
     
             const fields = [
                 ['User Answer:', Object.values(item.user_answer).join("\n")],
@@ -156,30 +167,30 @@ export const Result = () => {
             ];
     
             fields.forEach(([label, text]) => {
-                if (y > pageHeight - 40) {
-                    doc.addPage();
-                    y = 20;
-                }
-    
+                checkPageLimit(12);
                 doc.setFont('helvetica', 'bold');
                 doc.text(label, 10, y);
                 y += 6;
+    
                 doc.setFont('helvetica', 'normal');
                 let lines = doc.splitTextToSize(text, 180);
-                doc.text(lines, 15, y);
-                y += lines.length * 6 + 4;
+    
+                lines.forEach((line) => {
+                    checkPageLimit(6);
+                    doc.text(line, 15, y);
+                    y += 6;
+                });
+    
+                y += 4;
             });
     
-            if (y > pageHeight - 30) {
-                doc.addPage();
-                y = 20;
-            }
+            checkPageLimit(10);
             doc.setLineWidth(0.5);
             doc.line(10, y, 200, y);
             y += 10;
         });
     
-        // Footer with Date & Page Number
+        // Footer
         let pageCount = doc.internal.getNumberOfPages();
         for (let i = 1; i <= pageCount; i++) {
             doc.setPage(i);
