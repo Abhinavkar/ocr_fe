@@ -9,7 +9,7 @@ import ArrowDownSvg from "../../assets/images/arrow-down.svg";
 import tooltipPng from "../../assets/images/tooltip.png";
 import SideNav from '../../components/SideNav';
 import { Tooltip, Button, Flex } from 'antd';
-
+import {  QuestionOutlined  } from '@ant-design/icons';
 
 
 export const AdminDashboard = () => {
@@ -402,7 +402,7 @@ const handleView = (url) => {
                                                     <div>
                                                            
                                                            <Tooltip title="Please upload your questions in the correct format, ensuring that each question is properly numbered. Accepted only pdf format">
-                                                                <Button type="primary" shape="circle" icon={<img src={CareersPng} alt="" />} />
+                                                                <Button type="primary" shape="circle" icon={<QuestionOutlined />} />
                                                            </Tooltip>
                                                     </div>
                                                     </div>
