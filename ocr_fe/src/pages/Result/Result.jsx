@@ -206,8 +206,28 @@ export const Result = () => {
     
     
     
-    const handleDelete = (record) => {
-        message.warning(`Delete functionality for result ID ${record._id} not implemented yet.`);
+    const handleDelete = async (record) => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/qa/delete/results/${record._id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': user.organization_id,
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to delete result');
+            }
+    
+            message.success(`Result ID ${record._id} deleted successfully.`);
+            
+            // Remove deleted result from state
+            setResults((prevResults) => prevResults.filter((item) => item._id !== record._id));
+        } catch (error) {
+            console.error('Error deleting result:', error);
+            message.error('Failed to delete result.');
+        }
     };
 
     const handleReevaluate = (record) => {
@@ -270,7 +290,7 @@ export const Result = () => {
         {
             title: 'Uploaded By',
             key: 'uploaded_by',
-            render: () => 'Ritu Choudhary',
+            render: () => 'Digant Mohanty',
         },
         {
             title: 'Actions',

@@ -401,7 +401,7 @@ const handleView = (url) => {
                                                     </select>
                                                     <div>
                                                            
-                                                           <Tooltip title="Please upload your questions in the correct format, ensuring that each question is properly numbered. Accepted only pdf format">
+                                                           <Tooltip title="Please upload your course and questions in the correct format, ensuring that each question is properly numbered. Accepted only pdf format">
                                                                 <Button type="primary" shape="circle" icon={<QuestionOutlined />} />
                                                            </Tooltip>
                                                     </div>
