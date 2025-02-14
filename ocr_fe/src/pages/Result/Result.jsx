@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import './Result.css';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
-import { Table, Button, message } from 'antd';
+import { Table, Button, message, Popconfirm } from 'antd';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import SideNav from '../../components/SideNav';
@@ -299,7 +299,14 @@ export const Result = () => {
                 <>
                     <Button onClick={() => handleDownload(record)}>Download</Button>
                     <Button onClick={() => handleReevaluate(record)}>Reevaluate</Button>
-                    <Button onClick={() => handleDelete(record)}>Delete</Button>
+                    <Popconfirm
+                        title="Are you sure to delete this result?"
+                        onConfirm={() => handleDelete(record)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button type="danger">Delete</Button>
+                    </Popconfirm>
                 </>
             ),
         },
