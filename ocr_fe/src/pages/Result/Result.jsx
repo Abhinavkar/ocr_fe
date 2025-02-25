@@ -116,7 +116,7 @@ export const Result = () => {
             ['Subject:', result?.subject_name],
             ['Roll No:', result?.roll_no],
             ['Score:', result?.scores],
-            ['Document Uploaded By:', 'Abhinav Kar']
+            ['Document Uploaded By:', 'Digant Mohanty']
         ];
         
         info.forEach(([label, value]) => {
@@ -151,15 +151,31 @@ export const Result = () => {
             y += 6;
     
             doc.setFont('helvetica', 'normal');
-            // question=item.question.strip('\n')
-            let questionLines = doc.splitTextToSize(item.question, 180);
+
+
+            
+            // // Fix question formatting to remove split words and unwanted line breaks
+            // let formattedQuestion = item.question.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+            // let questionLines = doc.splitTextToSize(formattedQuestion, 180);
     
-            questionLines.forEach((line) => {
+            // questionLines.forEach((line) => {
+            //     checkPageLimit(6);
+            //     doc.text(line, 15, y);
+            //     y += 6;
+            // });
+
+            let questionList = item.question
+                .replace(/\n/g, ' ')  // Remove line breaks
+                .replace(/\s+/g, ' ') // Remove extra spaces
+                .trim()
+                .split(/(?=\d+\.)/);  // Split when numbered pattern appears
+
+            questionList.forEach((q) => {
                 checkPageLimit(6);
-                doc.text(line, 15, y);
+                doc.text(q.trim(), 15, y);
                 y += 6;
             });
-    
+                
             const fields = [
                 ['User Answer:', Object.values(item.user_answer).join("\n")],
                 ['Model Answer:', item.model_generated_answer],
@@ -201,7 +217,6 @@ export const Result = () => {
     
         doc.save(`result_${result._id}.pdf`);
     };
-    
     
     
     
