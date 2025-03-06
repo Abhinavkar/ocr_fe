@@ -12,6 +12,7 @@ import Organization from './pages/Organization/Organization';
 import PrivateRoute from './components/PrivateRoute';
 import Department from './pages/Department/Department';
 import Exam from './pages/Exam/Exam';
+import AnswerUpload from './pages/AnswerUpload/AnswerUpload';
 
 function App() {
   return (
@@ -85,6 +86,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path='/answerupload'
+          element={
+            <PrivateRoute>
+              <AnswerUpload/>
+            </PrivateRoute>
+
+          }/>
       </Routes>
     </div>
   );

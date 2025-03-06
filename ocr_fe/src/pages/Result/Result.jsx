@@ -96,7 +96,7 @@ export const Result = () => {
         doc.setTextColor(0, 0, 128);
         doc.text('Student Result Card', 105, 20, { align: 'center' });
     
-        doc.setFontSize(14);
+        doc.setFontSize(14);jspdf
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.text(result?.organization || 'Unknown Organization', 105, 30, { align: 'center' });

@@ -8,6 +8,7 @@ import AdminDashboard from '../Admin_Dashboard/AdminDashboard';
 // import ManageExam from './ExamManagement/ManageExam';
 // import AddExam from './ExamManagement/AddExam';
 import ExamManage from './ExamManage/ExamManage';
+import AnswerUpload from '../AnswerUpload/AnswerUpload';
 
 const { TabPane } = Tabs;
 
@@ -40,8 +41,7 @@ const Exam = () => {
             </TabPane>
             <TabPane tab="Exam Overview" key="4">
               <div className='tab-content'>
-                <h4>Exam Overview Content</h4>
-                <p>Details about the exam...</p>
+                <AnswerUpload/>
               </div>
             </TabPane>
           </Tabs>
