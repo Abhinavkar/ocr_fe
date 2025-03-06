@@ -39,7 +39,7 @@ const Exam = () => {
                 <AdminDashboard/>
               </div>
             </TabPane>
-            <TabPane tab="Exam Overview" key="4">
+            <TabPane tab="Answer Upload" key="4">
               <div className='tab-content'>
                 <AnswerUpload/>
               </div>

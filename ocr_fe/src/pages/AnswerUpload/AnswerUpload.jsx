@@ -53,16 +53,17 @@ const AnswerUpload = () => {
       }
     };
 
-      fetchClasses(organizationSelected);
+    fetchClasses(organizationSelected);
     
-      setClasses([]);
-      setClassSelected('');
-      setSections([]);
-      setSectionSelected('');
-      setSubjects([]);
-      setSubjectSelected('');
+    setClasses([]);
+    setClassSelected('');
+    setSections([]);
+    setSectionSelected('');
+    setSubjects([]);
+    setSubjectSelected('');
     
   },[]);
+  
   useEffect(() => {
     if (classSelected) {
       fetchSections(classSelected);
@@ -169,15 +170,12 @@ const AnswerUpload = () => {
     formData.append('classId', classSelected); // Include classId in the form data
     formData.append('sectionId', sectionSelected); // Include sectionId in the form data
     formData.append('subjectId', subjectSelected);
-    formData.append('organizationId', userOrgId);
+    formData.append('organizationId', user?.organization_id);
     formData.append('answer_pdf', pdf);
 
     try {
       const response = await fetch(`http://localhost:8000/api/qa/upload/answers/`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
         body: formData,
       });
 
@@ -199,6 +197,7 @@ const AnswerUpload = () => {
       setIsUploading(false);
     }
   };
+
   const handlePickPdf = (info) => {
     if (info.file.status === 'done') {
       setPdf(info.file.originFileObj);
@@ -216,7 +215,6 @@ const AnswerUpload = () => {
         <Select
           value={user.organization}
           style={{ width: '100%' }}
-          
         >
           <Option value={user.organization}>{user.organization}</Option>
         </Select>
@@ -290,16 +288,17 @@ const AnswerUpload = () => {
         />
       </div>
       <div>
-        <label>Upload PDF</label>
+        <label></label>
         <Upload
           name="pdf"
           accept=".pdf"
-          beforeUpload={() => false}
+          beforeUpload={(file) => {
+            setPdf(file);
+            return false; // Prevent automatic upload
+          }}
           onChange={handlePickPdf}
         > 
-          <Button icon={<UploadOutlined />} style={{
-            border:0
-          }}>Select PDF</Button>
+          <Button icon={<UploadOutlined />} style={{ border: 0 }}>Select PDF</Button>
         </Upload>
         {pdf && <span>{pdf.name}</span>}
       </div>

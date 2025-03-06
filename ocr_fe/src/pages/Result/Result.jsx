@@ -76,7 +76,6 @@ export const Result = () => {
         localStorage.removeItem('is_admin');
         navigate('/');
     };
-
     const handleDownload = (result) => {
         const doc = new jsPDF();
         const pageHeight = doc.internal.pageSize.height;
@@ -96,14 +95,14 @@ export const Result = () => {
         doc.setTextColor(0, 0, 128);
         doc.text('Student Result Card', 105, 20, { align: 'center' });
     
-        doc.setFontSize(14);jspdf
+        doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.text(result?.organization || 'Unknown Organization', 105, 30, { align: 'center' });
     
         doc.setLineWidth(0.5);
         doc.line(10, 35, 200, 35);
-        y = 45; 
+        y = 45;
     
         // General Info
         doc.setFontSize(12);
@@ -118,7 +117,7 @@ export const Result = () => {
             ['Score:', result?.scores],
             ['Document Uploaded By:', 'Digant Mohanty']
         ];
-        
+    
         info.forEach(([label, value]) => {
             checkPageLimit(10);
             doc.text(label, 10, y);
@@ -137,7 +136,7 @@ export const Result = () => {
         checkPageLimit(15);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
-        doc.setFillColor(200, 200, 200); 
+        doc.setFillColor(200, 200, 200);
         doc.rect(10, y, 190, 10, 'F');
         doc.setTextColor(0, 0, 0);
         doc.text('Question-wise Details', 105, y + 7, { align: 'center' });
@@ -151,31 +150,22 @@ export const Result = () => {
             y += 6;
     
             doc.setFont('helvetica', 'normal');
-
-
-            
-            // // Fix question formatting to remove split words and unwanted line breaks
-            // let formattedQuestion = item.question.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-            // let questionLines = doc.splitTextToSize(formattedQuestion, 180);
     
-            // questionLines.forEach((line) => {
-            //     checkPageLimit(6);
-            //     doc.text(line, 15, y);
-            //     y += 6;
-            // });
-
+            // ✅ Fix question formatting to prevent split numbering issues
             let questionList = item.question
-                .replace(/\n/g, ' ')  // Remove line breaks
+                .replace(/\n/g, ' ')  // Remove unwanted line breaks
                 .replace(/\s+/g, ' ') // Remove extra spaces
                 .trim()
-                .split(/(?=\d+\.)/);  // Split when numbered pattern appears
-
-            questionList.forEach((q) => {
-                checkPageLimit(6);
-                doc.text(q.trim(), 15, y);
-                y += 6;
-            });
-                
+                .match(/(\d+\..*?)(?=(\d+\.)|$)/g); // Correctly extract numbered questions
+    
+            if (questionList) {
+                questionList.forEach((q) => {
+                    checkPageLimit(6);
+                    doc.text(q.trim(), 15, y);
+                    y += 6;
+                });
+            }
+    
             const fields = [
                 ['User Answer:', Object.values(item.user_answer).join("\n")],
                 ['Model Answer:', item.model_generated_answer],
@@ -217,8 +207,6 @@ export const Result = () => {
     
         doc.save(`result_${result._id}.pdf`);
     };
-    
-    
     
     
     const handleDelete = async (record) => {
