@@ -114,7 +114,7 @@ export const Result = () => {
             ['Section:', result?.section_name],
             ['Subject:', result?.subject_name],
             ['Roll No:', result?.roll_no],
-            ['Score:', result?.scores],
+            // ['Score:', result?.scores],
             ['Document Uploaded By:', 'Digant Mohanty']
         ];
     
@@ -165,11 +165,11 @@ export const Result = () => {
                     y += 6;
                 });
             }
-    
+            console.log("Final Score Data:", item.final_score);
             const fields = [
                 ['User Answer:', Object.values(item.user_answer).join("\n")],
                 ['Model Answer:', item.model_generated_answer],
-                ['Score:', Object.values(item.scores).join("\n")]
+                ['Score:', Object.values(item.final_score).join("")]
             ];
     
             fields.forEach(([label, text]) => {
