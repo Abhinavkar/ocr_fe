@@ -13,6 +13,7 @@ export const Result = () => {
     const [results, setResults] = useState([]);
     const [classes, setClasses] = useState([]);
     const [sections, setSections] = useState([]);
+    console.log(user)
 
     useEffect(() => {
         if (!user || !user.organization_id || !user.id) return;
@@ -98,7 +99,7 @@ export const Result = () => {
         doc.setFontSize(14);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(result?.organization || 'Unknown Organization', 105, 30, { align: 'center' });
+        doc.text(user?.organization|| 'Unknown Organization', 105, 30, { align: 'center' });
     
         doc.setLineWidth(0.5);
         doc.line(10, 35, 200, 35);
@@ -166,9 +167,10 @@ export const Result = () => {
                 });
             }
             console.log("Final Score Data:", item.final_score);
+            console.log(typeof(final_score))
             const fields = [
-                ['User Answer:', Object.values(item.user_answer).join("\n")],
-                ['Model Answer:', item.model_generated_answer],
+                // ['User Answer:', Object.values(item.user_answer).join("\n")],
+                // ['Model Answer:', item.model_generated_answer],
                 ['Score:', Object.values(item.final_score).join("")]
             ];
     
