@@ -115,9 +115,7 @@ export const Result = () => {
             ['Section:', result?.section_name],
             ['Subject:', result?.subject_name],
             ['Roll No:', result?.roll_no],
-            ['Total Score :',result?.total_possible_score],
             ['Total Obtained Score :',result?.total_obtained_score],
-            ['Percentage :',result?.final_percentage],
             ['Document Uploaded By:', 'Diganta Mohanty']
         ];
     
