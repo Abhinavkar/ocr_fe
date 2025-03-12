@@ -115,8 +115,10 @@ export const Result = () => {
             ['Section:', result?.section_name],
             ['Subject:', result?.subject_name],
             ['Roll No:', result?.roll_no],
-            // ['Score:', result?.scores],
-            ['Document Uploaded By:', 'Digant Mohanty']
+            ['Total Score :',result?.total_possible_score],
+            ['Total Obtained Score :',result?.total_obtained_score],
+            ['Percentage :',result?.final_percentage],
+            ['Document Uploaded By:', 'Diganta Mohanty']
         ];
     
         info.forEach(([label, value]) => {
@@ -286,12 +288,12 @@ export const Result = () => {
             key: 'total_score',
             sorter: (a, b) => a.total_score - b.total_score,
         },
-        {
-            title: 'Avg Score',
-            dataIndex: 'average_score',
-            key: 'average_score',
-            sorter: (a, b) => a.average_score - b.average_score,
-        },
+        // {
+        //     title: 'Avg Score',
+        //     dataIndex: 'average_score',
+        //     key: 'average_score',
+        //     sorter: (a, b) => a.average_score - b.average_score,
+        // },
         {
             title: 'Uploaded By',
             key: 'uploaded_by',
