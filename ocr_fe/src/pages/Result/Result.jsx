@@ -280,12 +280,12 @@ export const Result = () => {
             key: 'roll_no',
             sorter: (a, b) => a.roll_no - b.roll_no,
         },
-        {
-            title: 'Total Score',
-            dataIndex: 'total_score',
-            key: 'total_score',
-            sorter: (a, b) => a.total_score - b.total_score,
-        },
+        // {
+        //     title: 'Total Score',
+        //     dataIndex: 'total_score',
+        //     key: 'total_score',
+        //     sorter: (a, b) => a.total_obtained_score - b.total_obtained_score,
+        // },
         // {
         //     title: 'Avg Score',
         //     dataIndex: 'average_score',

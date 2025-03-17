@@ -217,6 +217,11 @@ export const AdminDashboard = () => {
                 setMessage("Your Document has been uploaded Successfully");
             } finally {
                 setIsUploading(false); 
+                setClassSelected('');
+                setSectionSelected('');
+                setSubjectSelected('');
+                setExamIds('');
+                setUploadedFiles();
             }
         }
         if (uploadType === 'image' && questionImage) {
@@ -244,6 +249,10 @@ export const AdminDashboard = () => {
                 setMessage("Your Document has been uploaded Successfully");
             } finally {
                 setIsUploading(false); 
+                setClassSelected('');
+                setSectionSelected('');
+                setSubjectSelected('');
+                setExamIds('');
             }
         }
 
@@ -257,7 +266,25 @@ export const AdminDashboard = () => {
     const handleNavigateAddSubadmin = () => {
         navigate('/add-subadmin');
     };
-
+    const fetchUploadedFiles = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/services/documents-list/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'organizationId': user.organization_id,
+                },
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setUploadedFiles(data);
+            } else {
+                setMessage('Failed to fetch uploaded files');
+            }
+        } catch (error) {
+            setMessage('An error occurred while fetching uploaded files');
+        }
+    };
     useEffect(() => {
         const fetchUploadedFiles = async () => {
             try {
