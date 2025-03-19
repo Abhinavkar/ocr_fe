@@ -221,7 +221,7 @@ export const AdminDashboard = () => {
                 setSectionSelected('');
                 setSubjectSelected('');
                 setExamIds('');
-                setUploadedFiles();
+                
             }
         }
         if (uploadType === 'image' && questionImage) {
