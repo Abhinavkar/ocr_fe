@@ -61,8 +61,8 @@ const SideNav = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/answerupload">
-                        <span><img src={DownloadPng} alt="Download" /></span>Answer Upload 
+                    <Link to="/result">
+                        <span><img src={DownloadPng} alt="Download" /></span>Result Download
                     </Link>
                 </li>
                 {/* {(user.is_admin || user.is_sub_admin) && (
