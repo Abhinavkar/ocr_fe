@@ -39,6 +39,8 @@ const ClassManagement = () => {
         fetchClasses();
     }, [user.organization_id, user.id]);
 
+
+
     const handleAddClass = async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/`, {
@@ -49,19 +51,53 @@ const ClassManagement = () => {
                 },
                 body: JSON.stringify({ name: newClassName, organization_id: user.organization_id }),
             });
-
+    
             if (!response.ok) throw new Error('Failed to create class.');
-
-            const newClass = await response.json();
-            setClasses((prevClasses) => [...prevClasses, newClass]);
-            setNewClassName('');
+    
             message.success('Class added successfully');
-            navigate("/department")
+            setNewClassName('');
+    
+            // Fetch the updated list of classes
+            const updatedResponse = await fetch(`${API_BASE_URL}/${user.organization_id}`, {
+                method: 'GET',
+                headers: { userId: user.id },
+            });
+    
+            if (!updatedResponse.ok) throw new Error('Failed to fetch updated classes.');
+    
+            const updatedClasses = await updatedResponse.json();
+            setClasses(updatedClasses);
+            
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add class');
         }
     };
+
+    // const handleAddClass = async () => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 userId: user.id,
+    //             },
+    //             body: JSON.stringify({ name: newClassName, organization_id: user.organization_id }),
+    //         });
+
+    //         if (!response.ok) throw new Error('Failed to create class.');
+
+    //         const newClass = await response.json();
+    //         setClasses((prevClasses) => [...prevClasses, newClass]);
+    //         setNewClassName('');
+    //         message.success('Class added successfully');
+            
+            
+    //     } catch (error) {
+    //         console.error(error.message);
+    //         message.error('Failed to add class');
+    //     }
+    // };
 
     const handleDeleteClass = async (classId) => {
         try {

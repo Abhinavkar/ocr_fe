@@ -63,6 +63,36 @@ const SectionManagement = () => {
         fetchClasses();
     }, [user.organization_id]);
 
+    // const handleAddSection = async () => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL_SEC}/`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 userId: user.id,
+    //             },
+    //             body: JSON.stringify({
+    //                 name: newSectionName,
+    //                 class_id: selectedClassId,
+    //                 organization_id: user.organization_id,
+    //             }),
+    //         });
+
+    //         if (!response.ok) throw new Error('Failed to create section.');
+
+    //         const newSection = await response.json();
+    //         setSections((prevSections) => [...prevSections, newSection]);
+    //         setNewSectionName('');
+    //         setSelectedClassId('');
+    //         message.success('Section added successfully');
+    //         navigate("/department")
+
+    //     } catch (error) {
+    //         console.error(error.message);
+    //         message.error('Failed to add section');
+    //     }
+    // };
+
     const handleAddSection = async () => {
         try {
             const response = await fetch(`${API_BASE_URL_SEC}/`, {
@@ -77,16 +107,23 @@ const SectionManagement = () => {
                     organization_id: user.organization_id,
                 }),
             });
-
+    
             if (!response.ok) throw new Error('Failed to create section.');
-
-            const newSection = await response.json();
-            setSections((prevSections) => [...prevSections, newSection]);
+    
+            message.success('Section added successfully');
             setNewSectionName('');
             setSelectedClassId('');
-            message.success('Section added successfully');
-            navigate("/department")
-
+    
+            // Fetch updated sections from the backend
+            const updatedResponse = await fetch(`${API_BASE_URL}/${user.organization_id}/`, {
+                method: 'GET',
+            });
+    
+            if (!updatedResponse.ok) throw new Error('Failed to fetch updated sections.');
+    
+            const updatedSections = await updatedResponse.json();
+            setSections(updatedSections);
+    
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add section');

@@ -56,6 +56,7 @@ const SubjectManagement = () => {
                 const data = await response.json();
                 console.log('Classes:', data); // Debugging log
                 setClasses(data);
+                
             } catch (error) {
                 console.error(error.message);
             }
@@ -121,7 +122,7 @@ const SubjectManagement = () => {
             setSelectedClassId('');
             setSelectedSectionId('');
             message.success('Subject added successfully');
-            navigate('/department')
+            navigate('/dashboard')
         } catch (error) {
             console.error(error.message);
             message.error('Failed to add subject');
